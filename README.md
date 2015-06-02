@@ -1,0 +1,1 @@
+# manila-service-image
