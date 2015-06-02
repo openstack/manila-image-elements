@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+sudo sed -i -E "s/#\s(deb.+universe)$/\1/g" /etc/apt/sources.list
+
+apt-get update
+apt-get upgrade -y
+apt-get install python sudo openssh-server rpcbind -y

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+# Patch NFS init script to allow running nfs-kernel-server without exports:
+sed -i 's/\s&&\sgrep\s-q\s.*\s\$export_files$//g' /etc/init.d/nfs-kernel-server

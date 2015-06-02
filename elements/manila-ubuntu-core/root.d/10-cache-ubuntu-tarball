@@ -1,0 +1,62 @@
+#!/bin/bash
+# These are useful, or at worst not harmful, for all images we build.
+
+if [ ${DIB_DEBUG_TRACE:-1} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+[ -n "$ARCH" ]
+[ -n "$TARGET_ROOT" ]
+
+shopt -s extglob
+
+DIB_CLOUD_IMAGES=${DIB_CLOUD_IMAGES:-http://cdimage.ubuntu.com/ubuntu-core/releases/}
+DIB_RELEASE="trusty" # Note(u_glide): another releases not supported/tested
+DIB_RELEASE_NUM="14.04"
+BASE_IMAGE_FILE=${BASE_IMAGE_FILE:-ubuntu-core-$DIB_RELEASE_NUM-core-$ARCH.tar.gz}
+SHA256SUMS=${SHA256SUMS:-http://${DIB_CLOUD_IMAGES##http?(s)://}/$DIB_RELEASE/release/SHA256SUMS}
+CACHED_FILE=$DIB_IMAGE_CACHE/$BASE_IMAGE_FILE
+CACHED_FILE_LOCK=$DIB_IMAGE_CACHE/$BASE_IMAGE_FILE.lock
+CACHED_SUMS=$DIB_IMAGE_CACHE/SHA256SUMS.ubuntu.$DIB_RELEASE.$ARCH
+
+function get_ubuntu_tarball() {
+    if [ -n "$DIB_OFFLINE" -a -f "$CACHED_FILE" ] ; then
+        echo "Not checking freshness of cached $CACHED_FILE."
+    else
+        echo "Fetching Base Image"
+        $TMP_HOOKS_PATH/bin/cache-url $SHA256SUMS $CACHED_SUMS
+        $TMP_HOOKS_PATH/bin/cache-url \
+            $DIB_CLOUD_IMAGES/$DIB_RELEASE/release/$BASE_IMAGE_FILE $CACHED_FILE
+        pushd $DIB_IMAGE_CACHE
+        if ! grep "$BASE_IMAGE_FILE" $CACHED_SUMS | sha256sum --check - ; then
+            # It is likely that an upstream http(s) proxy has given us a skewed
+            # result - either a cached SHA file or a cached image. Use cache-busting
+            # to get (as long as caches are compliant...) fresh files.
+            # Try the sha256sum first, just in case that is the stale one (avoiding
+            # downloading the larger image), and then if the sums still fail retry
+            # the image.
+            $TMP_HOOKS_PATH/bin/cache-url -f $SHA256SUMS $CACHED_SUMS
+            if ! grep "$BASE_IMAGE_FILE" $CACHED_SUMS | sha256sum --check - ; then
+                $TMP_HOOKS_PATH/bin/cache-url -f \
+                    $DIB_CLOUD_IMAGES/$DIB_RELEASE/release/$BASE_IMAGE_FILE $CACHED_FILE
+                grep "$BASE_IMAGE_FILE" $CACHED_SUMS | sha256sum --check -
+            fi
+        fi
+        popd
+    fi
+    # Extract the base image (use --numeric-owner to avoid UID/GID mismatch between
+    # image tarball and host OS e.g. when building Ubuntu image on an openSUSE host)
+    sudo tar -C $TARGET_ROOT --numeric-owner -xzf $DIB_IMAGE_CACHE/$BASE_IMAGE_FILE
+}
+
+(
+    echo "Getting $CACHED_FILE_LOCK: $(date)"
+    # Wait up to 20 minutes for another process to download
+    if ! flock -w 1200 9 ; then
+        echo "Did not get $CACHED_FILE_LOCK: $(date)"
+        exit 1
+    fi
+    get_ubuntu_tarball
+) 9> $CACHED_FILE_LOCK

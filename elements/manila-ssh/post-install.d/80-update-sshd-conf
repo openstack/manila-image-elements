@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+# NOTE(u_glide): Security Warning! Use following option only for debugging purpouses
+# sed -i 's/^#*PasswordAuthentication\sno/PasswordAuthentication yes/g' /etc/ssh/sshd_config
