@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+if [ -n "$DIB_MANILA_USER_AUTHORIZED_KEYS" ]; then
+    if [ -f "$DIB_MANILA_USER_AUTHORIZED_KEYS" ]; then
+        cat $DIB_MANILA_USER_AUTHORIZED_KEYS >> $TMP_HOOKS_PATH/manilauser-ssh-authorized-keys
+    fi
+fi
