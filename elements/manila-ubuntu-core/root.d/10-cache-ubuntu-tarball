@@ -21,7 +21,7 @@ CACHED_FILE=$DIB_IMAGE_CACHE/$BASE_IMAGE_FILE
 CACHED_FILE_LOCK=$DIB_IMAGE_CACHE/$BASE_IMAGE_FILE.lock
 CACHED_SUMS=$DIB_IMAGE_CACHE/SHA256SUMS.ubuntu.$DIB_RELEASE.$ARCH
 
-function get_ubuntu_tarball() {
+function get_ubuntu_tarball {
     if [ -n "$DIB_OFFLINE" -a -f "$CACHED_FILE" ] ; then
         echo "Not checking freshness of cached $CACHED_FILE."
     else
