@@ -1,8 +1,6 @@
 #!/bin/bash
 
 set -x
-set -eu
-set -o pipefail
 
 MANILA_USER="manila"
 MANILA_USER_HOME="/home/$MANILA_USER"
@@ -11,6 +9,7 @@ MANILA_USER_SSH_DIR="$MANILA_USER_HOME/.ssh"
 if [ ! -d $MANILA_USER_SSH_DIR ]; then
   mkdir -p $MANILA_USER_SSH_DIR
   chmod 700 $MANILA_USER_SSH_DIR
+  chown -R $MANILA_USER $MANILA_USER_SSH_DIR
 fi
 
 # Fetch public key using HTTP
@@ -21,6 +20,7 @@ while [ ! -f $MANILA_USER_SSH_DIR/authorized_keys ]; do
   if [ $? -eq 0 ]; then
     cat /tmp/metadata-key >> $MANILA_USER_SSH_DIR/authorized_keys
     chmod 0600 $MANILA_USER_SSH_DIR/authorized_keys
+    chown $MANILA_USER $MANILA_USER_SSH_DIR/authorized_keys
     rm -f /tmp/metadata-key
     echo "Successfully retrieved public key from instance metadata"
     echo "*****************"
@@ -38,5 +38,3 @@ while [ ! -f $MANILA_USER_SSH_DIR/authorized_keys ]; do
       sleep 5
   fi
 done
-
-chown -R $MANILA_USER $MANILA_USER_SSH_DIR
