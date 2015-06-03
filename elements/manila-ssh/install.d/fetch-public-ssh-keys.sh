@@ -13,7 +13,7 @@ if [ ! -d $MANILA_USER_SSH_DIR ]; then
 fi
 
 # Fetch public key using HTTP
-ATTEMPTS=10
+ATTEMPTS=30
 FAILED=0
 while [ ! -f $MANILA_USER_SSH_DIR/authorized_keys ]; do
     curl -f http://169.254.169.254/latest/meta-data/public-keys/0/openssh-key > /tmp/metadata-key 2>/dev/null
