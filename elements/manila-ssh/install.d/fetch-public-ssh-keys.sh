@@ -13,7 +13,7 @@ if [ ! -d $MANILA_USER_SSH_DIR ]; then
 fi
 
 # Fetch public key using HTTP
-ATTEMPTS=30
+ATTEMPTS=60 # Wait up to 5 minutes
 FAILED=0
 while [ ! -f $MANILA_USER_SSH_DIR/authorized_keys ]; do
     curl -f http://169.254.169.254/latest/meta-data/public-keys/0/openssh-key > /tmp/metadata-key 2>/dev/null
@@ -32,7 +32,7 @@ while [ ! -f $MANILA_USER_SSH_DIR/authorized_keys ]; do
         FAILED=`expr $FAILED + 1`
         if [ $FAILED -ge $ATTEMPTS ]; then
             echo "Failed to retrieve public key from instance metadata after $FAILED attempts, quitting"
-            break
+            exit 1
         fi
         echo "Could not retrieve public key from instance metadata (attempt #$FAILED/$ATTEMPTS), retrying in 5 seconds..."
         sleep 5
