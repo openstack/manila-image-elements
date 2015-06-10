@@ -15,6 +15,6 @@ Script for creating Ubuntu based image with our elements and default parameters.
 
 .. sourcecode:: bash
 
-    tox -e venv -- manila-image-create
+    tox -e buildimage
 
 Note: More information about script `diskimage-create <https://github.com/openstack/sahara-image-elements/blob/master/diskimage-create/README.rst>`_
