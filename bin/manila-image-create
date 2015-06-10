@@ -42,7 +42,7 @@ REQUIRED_ELEMENTS="manila-ssh vm $MANILA_IMG_OS dhcp-all-interfaces cleanup-kern
 OPTIONAL_ELEMENTS=
 OPTIONAL_DIB_ARGS=
 
-if [ "$MANILA_ENABLE_CIFS_SUPPORT" != "yes" && "$MANILA_ENABLE_CIFS_SUPPORT" = "yes" ]; then
+if [ "$MANILA_ENABLE_CIFS_SUPPORT" != "yes" && "$MANILA_ENABLE_NFS_SUPPORT" != "yes" ]; then
     echo "You should enable NFS or CIFS support for manila image."
 fi
 
