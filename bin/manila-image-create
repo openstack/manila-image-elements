@@ -29,7 +29,7 @@ MANILA_USER_AUTHORIZED_KEYS="None"
 MANILA_IMG_ARCH=${MANILA_IMG_ARCH:-"i386"}
 MANILA_IMG_OS=${MANILA_IMG_OS:-"manila-ubuntu-core"}
 MANILA_IMG_OS_VER=${MANILA_IMG_OS_VER:-"trusty"}
-MANILA_IMG_NAME=${MANILA_IMG_NAME:-"ubuntu-manila-service-image.qcow2"}
+MANILA_IMG_NAME=${MANILA_IMG_NAME:-"manila-service-image.qcow2"}
 
 # Manila features
 MANILA_ENABLE_NFS_SUPPORT=${MANILA_ENABLE_NFS_SUPPORT:-"yes"}
