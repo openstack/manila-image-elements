@@ -17,4 +17,4 @@ Script for creating Ubuntu based image with our elements and default parameters.
 
     tox -e buildimage
 
-Note: More information about script `diskimage-create <https://github.com/openstack/sahara-image-elements/blob/master/diskimage-create/README.rst>`_
+Note: Make sure you have qemu-img (qemu-utils package on Ubuntu/Debian, qemu on Fedora/RHEL/openSUSE) and kpartx installed.
