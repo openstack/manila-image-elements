@@ -24,7 +24,6 @@ target
 *.ipr
 *.iws
 *.db
-.coverage
 ChangeLog
 AUTHORS
 *.qcow2
