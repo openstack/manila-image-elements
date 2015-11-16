@@ -1,0 +1,7 @@
+#!/bin/bash -xe
+
+IMAGE=$1
+
+if [ "$IMAGE" = "generic" ]; then
+    tox -e buildimage
+fi

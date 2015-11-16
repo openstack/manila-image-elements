@@ -16,5 +16,3 @@ Script for creating Ubuntu based image with our elements and default parameters.
 .. sourcecode:: bash
 
     tox -e buildimage
-
-Note: Make sure you have qemu-img (qemu-utils package on Ubuntu/Debian, qemu on Fedora/RHEL/openSUSE) and kpartx installed.
