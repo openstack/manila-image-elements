@@ -13,6 +13,20 @@ else
 fi
 export ELEMENTS_PATH=$_PREFIX/elements
 
+# Detect which image should be created
+# generic - qcow image for VM
+# lxd - tar for LXD
+MANILA_IMAGE_TYPE=${1:-"generic"}
+
+if [ "$MANILA_IMAGE_TYPE" != "generic" ] && [ "$MANILA_IMAGE_TYPE" != "lxd" ]; then
+    echo -e "Image type $MANILA_IMAGE_TYPE is not supported."
+    exit 2
+fi
+
+echo
+echo "Build image: $MANILA_IMAGE_TYPE"
+echo
+
 # Collect configuration
 # --------------------
 # Development options:
@@ -30,7 +44,8 @@ MANILA_USER_AUTHORIZED_KEYS="None"
 MANILA_IMG_ARCH=${MANILA_IMG_ARCH:-"i386"}
 MANILA_IMG_OS=${MANILA_IMG_OS:-"manila-ubuntu-core"}
 MANILA_IMG_OS_VER=${MANILA_IMG_OS_VER:-"trusty"}
-MANILA_IMG_NAME=${MANILA_IMG_NAME:-"manila-service-image.qcow2"}
+MANILA_IMG_NAME=${MANILA_IMG_NAME:-"manila-service-image"}
+MANILA_LXD_METADATA_PACKAGE_NAME=${MANILA_LXD_METADATA_PACKAGE_NAME:-"manila-lxd-meta"}
 
 # Manila features
 MANILA_ENABLE_NFS_SUPPORT=${MANILA_ENABLE_NFS_SUPPORT:-"yes"}
@@ -41,7 +56,15 @@ MANILA_ENABLE_ZFS_SUPPORT=${MANILA_ENABLE_ZFS_SUPPORT:-"yes"}
 
 # Verify configuration
 # --------------------
-REQUIRED_ELEMENTS="manila-ssh vm $MANILA_IMG_OS dhcp-all-interfaces cleanup-kernel-initrd"
+if [ "$MANILA_IMAGE_TYPE" = "lxd" ]; then
+    REQUIRED_ELEMENTS="manila-container $MANILA_IMG_OS"
+    IMAGE_FORMAT="tar"
+    MANILA_ENABLE_ZFS_SUPPORT="no"
+    export INSTALL_KERNEL=false
+else
+    REQUIRED_ELEMENTS="manila-ssh vm $MANILA_IMG_OS dhcp-all-interfaces cleanup-kernel-initrd"
+    IMAGE_FORMAT="qcow"
+fi
 OPTIONAL_ELEMENTS=
 OPTIONAL_DIB_ARGS=
 
@@ -50,7 +73,11 @@ if [ "$MANILA_ENABLE_CIFS_SUPPORT" != "yes" ] && [ "$MANILA_ENABLE_NFS_SUPPORT" 
 fi
 
 if [ "$MANILA_ENABLE_NFS_SUPPORT" = "yes" ]; then
-    OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS manila-nfs"
+    if [ "$MANILA_IMAGE_TYPE" = "lxd" ]; then
+        OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS manila-ganesha-nfs manila-unfs3"
+    else
+        OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS manila-nfs"
+    fi
 fi
 
 if [ "$MANILA_ENABLE_CIFS_SUPPORT" = "yes" ]; then
@@ -184,5 +211,44 @@ export DIB_MANILA_USER_AUTHORIZED_KEYS=$MANILA_USER_AUTHORIZED_KEYS
 
 # Build image
 # -----------
-disk-image-create -a $MANILA_IMG_ARCH $OPTIONAL_DIB_ARGS -o $MANILA_IMG_NAME\
+disk-image-create \
+    -t $IMAGE_FORMAT \
+    -a $MANILA_IMG_ARCH \
+    $OPTIONAL_DIB_ARGS \
+    -o $MANILA_IMG_NAME \
     $OPTIONAL_ELEMENTS $REQUIRED_ELEMENTS
+
+if [ "$MANILA_IMAGE_TYPE" = "lxd" ]; then
+    LXD_IMAGE_DIR=$_PREFIX/lxd-image.d
+    mkdir $LXD_IMAGE_DIR >/dev/null 2>&1 || rm -fR $LXD_IMAGE_DIR/*
+    mkdir $LXD_IMAGE_DIR/rootfs >/dev/null 2>&1 || rm -fR $LXD_IMAGE_DIR/rootfs/*
+
+    # Create LXD metadata package
+    cp -R $_PREFIX/data/lxd/meta/* $LXD_IMAGE_DIR
+
+    # Update creation timestamp in metafile
+    sed -i "s/%CREATION_DATE%/$(date +%s)/g" $LXD_IMAGE_DIR/metadata.yaml
+
+    # Create package
+    echo "Creating LXD metadata package..."
+    tar -cf $_PREFIX/$MANILA_LXD_METADATA_PACKAGE_NAME.tar \
+        -C $LXD_IMAGE_DIR templates  metadata.yaml
+    echo "Done. Metadata could be found here: $_PREFIX/$MANILA_LXD_METADATA_PACKAGE_NAME.tar"
+
+    # Create sys and proc directories required by LXD
+    mkdir -p $LXD_IMAGE_DIR/tmp/sys >/dev/null 2>&1 || echo "sys folder already exists in rootfs."
+    mkdir -p $LXD_IMAGE_DIR/tmp/proc >/dev/null 2>&1 || echo "proc folder already exists in rootfs."
+
+    sudo $_PREFIX/tools/add_to_rootfs_tar $_PREFIX/$MANILA_IMG_NAME.tar \
+        $LXD_IMAGE_DIR/tmp/sys /./sys/
+
+    sudo $_PREFIX/tools/add_to_rootfs_tar $_PREFIX/$MANILA_IMG_NAME.tar \
+        $LXD_IMAGE_DIR/tmp/proc /./proc/
+
+    rm -fR $LXD_IMAGE_DIR/tmp
+
+    # Compress rootfs
+    echo "Compressing rootfs package..."
+    sudo xz -f $_PREFIX/$MANILA_IMG_NAME.tar
+    echo "Done. rootfs could be found here: $_PREFIX/$MANILA_IMG_NAME.tar.xz"
+fi
