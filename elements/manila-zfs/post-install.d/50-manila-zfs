@@ -1,0 +1,57 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+# NOTE(vponomaryov): this approach of ZFS installation is valid for
+# Ubuntu 14.04 (Trusty) and is very likely to be different for other releases.
+# Also, ZFS should be installed in 'post-install.d' section because its
+# dependency 'dkms' is installed in 'install.d/99-dkms'.
+
+# Presense of 'ARCH' env var blocks DKMS from building new dynamic kernel
+# modules. So, unset it temporary.
+ARCH_BACKUP=$ARCH
+unset ARCH
+
+# Install 'software-properties-common' to get 'apt-add-repository' installed
+apt-get install -y software-properties-common
+
+# Register ZFS private package archive
+apt-add-repository --yes ppa:zfs-native/stable
+
+# Update list of available packages and then upgrade
+apt-get -y -q update && apt-get -y -q upgrade
+
+# 'linux-headers-*' should be installed prior to any dynamic kernel modules,
+# which are 'zfs' and its dependency 'spl'.
+# Same about 'build-essential', that is required for package compilations.
+apt-get install -y linux-headers-generic
+apt-get install -y build-essential
+
+# Install ZFS for Ubuntu
+apt-get install -y ubuntu-zfs
+
+echo """
+# Expected following template:
+# %module-name%, %module-version%, %kernel-version%, %arch%: installed
+#
+# examples:
+# spl, 0.6.5.4, 3.13.0-76-generic, x86_64: installed
+# zfs, 0.6.5.4, 3.13.0-76-generic, x86_64: installed
+#
+# If it looks like following:
+# spl, x.y.z, added
+# zfs, x.y.z, added
+#
+# then something went wrong.
+#
+# List of dymanic kernel modules:
+"""
+dkms status
+
+# Return back env var changes
+export ARCH=$ARCH_BACKUP
+unset ARCH_BACKUP

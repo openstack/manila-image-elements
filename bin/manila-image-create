@@ -36,6 +36,8 @@ MANILA_IMG_NAME=${MANILA_IMG_NAME:-"manila-service-image.qcow2"}
 MANILA_ENABLE_NFS_SUPPORT=${MANILA_ENABLE_NFS_SUPPORT:-"yes"}
 MANILA_ENABLE_CIFS_SUPPORT=${MANILA_ENABLE_CIFS_SUPPORT:-"yes"}
 
+# Manila Generic share driver replication feature requires ZFS:
+MANILA_ENABLE_ZFS_SUPPORT=${MANILA_ENABLE_ZFS_SUPPORT:-"yes"}
 
 # Verify configuration
 # --------------------
@@ -53,6 +55,10 @@ fi
 
 if [ "$MANILA_ENABLE_CIFS_SUPPORT" = "yes" ]; then
     OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS manila-cifs"
+fi
+
+if [ "$MANILA_ENABLE_ZFS_SUPPORT" = "yes" ]; then
+    OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS manila-zfs"
 fi
 
 if [ "$USE_OFFLINE_MODE" = "yes" ]; then
