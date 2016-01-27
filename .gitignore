@@ -13,6 +13,8 @@ pip-log.txt
 .coverage
 .tox
 *.mo
+*.swp
+*~
 .mr.developer.cfg
 .DS_Store
 Thumbs.db
@@ -24,9 +26,18 @@ target
 *.ipr
 *.iws
 *.db
+*.log
 ChangeLog
 AUTHORS
 *.qcow2
 diskimage-create.*
 debug.sh
 /*.d
+
+# Files created by Sphinx build
+build
+doc/build
+
+# Development environment files
+.project
+.pydevproject
