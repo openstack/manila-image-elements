@@ -3,5 +3,5 @@
 IMAGE=$1
 
 if [ "$IMAGE" = "generic" ]; then
-    tox -e buildimage
+    tox -v -e buildimage
 fi
