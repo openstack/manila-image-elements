@@ -37,7 +37,7 @@ MANILA_ENABLE_NFS_SUPPORT=${MANILA_ENABLE_NFS_SUPPORT:-"yes"}
 MANILA_ENABLE_CIFS_SUPPORT=${MANILA_ENABLE_CIFS_SUPPORT:-"yes"}
 
 # Manila Generic share driver replication feature requires ZFS:
-MANILA_ENABLE_ZFS_SUPPORT=${MANILA_ENABLE_ZFS_SUPPORT:-"yes"}
+MANILA_ENABLE_ZFS_SUPPORT=${MANILA_ENABLE_ZFS_SUPPORT:-"no"}
 
 # Verify configuration
 # --------------------
