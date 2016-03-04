@@ -6,6 +6,7 @@ This repo is a place for Manila-related for diskimage-builder elements.
 * Free software: Apache license
 * Source: http://git.openstack.org/cgit/manila-image-elements
 * Bugs: http://bugs.launchpad.net/manila-image
+* Built Images: http://tarballs.openstack.org/manila-image-elements/images
 
 
 Build instructions
