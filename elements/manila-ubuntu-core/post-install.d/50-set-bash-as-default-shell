@@ -7,4 +7,5 @@ set -eu
 set -o pipefail
 
 # Set 'bash' as default shell for 'manila' user.
+id -u manila &>/dev/null || adduser manila --gecos Foo,Foo,Foo,Foo --disabled-password --quiet
 sudo chsh -s /bin/bash manila

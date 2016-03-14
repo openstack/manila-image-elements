@@ -1,0 +1,31 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+SCRIPTDIR=$(dirname $0)
+
+# Install required packages
+install-packages wget
+
+# Build unfs3
+cd /usr/src
+mkdir unfs3 && cd unfs3
+wget --no-check-certificate https://sourceforge.net/projects/unfs3/files/unfs3/0.9.22/unfs3-0.9.22.tar.gz
+tar -xzf unfs3-0.9.22.tar.gz && cd unfs3-0.9.22
+./configure
+make
+make install
+
+# Prepare /etc/exports
+echo "# unfs3 exports should be defined here" >> /etc/exports
+
+install -D -g root -o root -m 0755 \
+    ${SCRIPTDIR}/unfs3 /etc/init.d/unfs3
+sudo update-rc.d unfs3 defaults
+
+# Remove sources
+cd /usr/src && rm -fR unfs3

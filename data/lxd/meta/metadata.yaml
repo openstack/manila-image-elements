@@ -1,0 +1,56 @@
+{
+    "architecture": "i686",
+    "creation_date": %CREATION_DATE%,
+    "properties": {
+        "architecture": "i686",
+        "description": "Openstack Manila LXD image (ubuntu trusty i686).",
+        "name": "manila-lxd-ubuntu-trusty-i686",
+        "os": "ubuntu",
+        "release": "trusty",
+        "variant": "default"
+    },
+    "templates": {
+        "/etc/hostname": {
+            "template": "hostname.tpl",
+            "when": [
+                "create"
+            ]
+        },
+        "/etc/hosts": {
+            "template": "hosts.tpl",
+            "when": [
+                "create"
+            ]
+        },
+        "/etc/init/console.override": {
+            "template": "upstart-override.tpl",
+            "when": [
+                "create"
+            ]
+        },
+        "/etc/init/tty1.override": {
+            "template": "upstart-override.tpl",
+            "when": [
+                "create"
+            ]
+        },
+        "/etc/init/tty2.override": {
+            "template": "upstart-override.tpl",
+            "when": [
+                "create"
+            ]
+        },
+        "/etc/init/tty3.override": {
+            "template": "upstart-override.tpl",
+            "when": [
+                "create"
+            ]
+        },
+        "/etc/init/tty4.override": {
+            "template": "upstart-override.tpl",
+            "when": [
+                "create"
+            ]
+        }
+    }
+}

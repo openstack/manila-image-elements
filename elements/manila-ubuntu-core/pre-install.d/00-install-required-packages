@@ -10,6 +10,11 @@ sudo sed -i -E "s/#\s(deb.+universe)$/\1/g" /etc/apt/sources.list
 
 apt-get update
 apt-get upgrade -y
+
+if $INSTALL_KERNEL ; then
+    apt-get install linux-image-generic -y
+fi
+
 apt-get install \
     python \
     sudo \
