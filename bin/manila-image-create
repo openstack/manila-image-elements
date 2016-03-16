@@ -63,7 +63,7 @@ if [ "$MANILA_IMAGE_TYPE" = "lxd" ]; then
     export INSTALL_KERNEL=false
 else
     REQUIRED_ELEMENTS="manila-ssh vm $MANILA_IMG_OS dhcp-all-interfaces cleanup-kernel-initrd"
-    IMAGE_FORMAT="qcow"
+    IMAGE_FORMAT="qcow2"
 fi
 OPTIONAL_ELEMENTS=
 OPTIONAL_DIB_ARGS=
