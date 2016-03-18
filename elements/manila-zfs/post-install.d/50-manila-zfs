@@ -11,7 +11,7 @@ set -o pipefail
 # Also, ZFS should be installed in 'post-install.d' section because its
 # dependency 'dkms' is installed in 'install.d/99-dkms'.
 
-# Presense of 'ARCH' env var blocks DKMS from building new dynamic kernel
+# Presence of 'ARCH' env var blocks DKMS from building new dynamic kernel
 # modules. So, unset it temporary.
 ARCH_BACKUP=$ARCH
 unset ARCH
@@ -48,7 +48,7 @@ echo """
 #
 # then something went wrong.
 #
-# List of dymanic kernel modules:
+# List of dynamic kernel modules:
 """
 dkms status
 
