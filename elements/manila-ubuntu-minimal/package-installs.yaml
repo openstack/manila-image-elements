@@ -1,0 +1,8 @@
+openssh-server:
+sudo:
+rpcbind:
+vim:
+iptables:
+inetutils-ping:
+net-tools:
+python:

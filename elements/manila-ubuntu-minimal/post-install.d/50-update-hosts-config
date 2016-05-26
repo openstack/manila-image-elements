@@ -8,4 +8,4 @@ set -o pipefail
 
 # Update 'hosts' file with dn-ip predefinitions
 hosts_config="/etc/hosts"
-echo "127.0.0.1       localhost localhost.localdomain" >> $hosts_config
+echo "127.0.0.1       ubuntu localhost localhost.localdomain" >> $hosts_config

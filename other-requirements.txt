@@ -1,0 +1,2 @@
+# Package 'debootstrap' is required for 'ubuntu-minimal' element.
+debootstrap

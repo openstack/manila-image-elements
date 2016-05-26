@@ -42,7 +42,7 @@ MANILA_USER_AUTHORIZED_KEYS="None"
 
 # Manila image settings
 MANILA_IMG_ARCH=${MANILA_IMG_ARCH:-"i386"}
-MANILA_IMG_OS=${MANILA_IMG_OS:-"manila-ubuntu-core"}
+MANILA_IMG_OS=${MANILA_IMG_OS:-"manila-ubuntu-minimal"}
 MANILA_IMG_OS_VER=${MANILA_IMG_OS_VER:-"trusty"}
 MANILA_IMG_NAME=${MANILA_IMG_NAME:-"manila-service-image"}
 MANILA_LXD_METADATA_PACKAGE_NAME=${MANILA_LXD_METADATA_PACKAGE_NAME:-"manila-lxd-meta"}
@@ -62,7 +62,7 @@ if [ "$MANILA_IMAGE_TYPE" = "lxd" ]; then
     MANILA_ENABLE_ZFS_SUPPORT="no"
     export INSTALL_KERNEL=false
 else
-    REQUIRED_ELEMENTS="manila-ssh vm $MANILA_IMG_OS dhcp-all-interfaces cleanup-kernel-initrd"
+    REQUIRED_ELEMENTS="manila-ssh vm $MANILA_IMG_OS dhcp-all-interfaces"
     IMAGE_FORMAT="qcow2"
 fi
 OPTIONAL_ELEMENTS=
@@ -99,11 +99,6 @@ fi
 
 if [ "$DISABLE_IMG_COMPRESSION" = "yes" ]; then
     OPTIONAL_DIB_ARGS="$OPTIONAL_DIB_ARGS -u"
-fi
-
-if [ "$MANILA_IMG_OS" = "manila-ubuntu-core" ] && [ "$MANILA_IMG_OS_VER" != "trusty" ]; then
-    echo "manila-ubuntu-core doesn't support '$MANILA_IMG_OS_VER' release."
-    echo "Change MANILA_IMG_OS to 'ubuntu' if you need another release."
 fi
 
 # Verify dependencies
