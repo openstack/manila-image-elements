@@ -176,11 +176,11 @@ if need_required_packages; then
                 sudo zypper --non-interactive --gpg-auto-import-keys in $package_list
                 ;;
             "fedora" | "rhel" | "centos")
-                if [ ${platform} = "centos" ]; then
-                    # install EPEL repo, in order to install argparse
-                    sudo rpm -Uvh --force http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+                if [ ${platform} = "fedora" ]; then
+                    sudo dnf install $package_list -y                    
+                else
+                    sudo yum install $package_list -y
                 fi
-                sudo yum install $package_list -y
                 ;;
             *)
                 echo -e "Unknown platform '$platform' for installing packages.\nAborting"
