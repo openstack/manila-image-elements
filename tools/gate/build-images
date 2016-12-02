@@ -4,8 +4,6 @@ IMAGE=$1
 
 if [ "$IMAGE" = "generic" ]; then
     tox -v -e buildimage
-elif [ "$IMAGE" = "lxd" ]; then
-    tox -v -e buildimage-lxd
 elif [ "$IMAGE" = "docker" ]; then
     tox -v -e buildimage-docker
 fi
