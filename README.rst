@@ -48,7 +48,7 @@ Precisely, the syntax is as follows:
 
     tox -e buildimage -- -s nfs
 
-Where <share-protocol> can be nfs, cifs or zfs.
+Where <share-protocol> can be nfs, cifs, zfs or nfs-ganesha.
 
 For example, running:
 

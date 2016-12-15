@@ -1,9 +1,0 @@
-cmake:
-    phase: post-install.d
-    uninstall: True
-build-essential:
-    phase: post-install.d
-    uninstall: True
-git-core:
-    phase: post-install.d
-    uninstall: True

@@ -1,0 +1,17 @@
+bison:
+build-essential:
+cmake:
+dbus:
+flex:
+git-core:
+libcephfs-dev:
+libdbus-1-dev:
+libkrb5-dev:
+libtirpc1:
+libssl-dev:
+nfs-common:
+pkg-config:
+rpcbind:
+uuid-dev:
+libcap-dev:
+libblkid-dev:

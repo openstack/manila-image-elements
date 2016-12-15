@@ -56,15 +56,17 @@ err() {
 print_usage() {
     echo "Usage: ${0##*/} [-s share-proto] [-h]"
     echo "Options:"
-    echo " -s | --share-proto: name of the share protocol. Possible options are nfs, cifs or zfs"
+    echo " -s | --share-proto: name of the share protocol. \
+         Possible options are nfs, nfs-ganesha, cifs or zfs"
     echo " -h | --help: print this usage message and exit"
     echo ""
     echo "Usage example: manila_image_elements -s nfs"
 }
 
 valid_share_protocol(){
-    if [ "${MANILA_SHARE_PROTO}" != "nfs" ] && [ "${MANILA_SHARE_PROTO}" != "cifs" ] && [ "${MANILA_SHARE_PROTO}" != "zfs" ]; then
-        err "Protocol ${MANILA_SHARE_PROTO} not supported. Valid options are nfs, cifs or zfs."
+    if [ "${MANILA_SHARE_PROTO}" != "nfs" ] && [ "${MANILA_SHARE_PROTO}" != "nfs-ganesha" ] && 
+       [ "${MANILA_SHARE_PROTO}" != "cifs" ] && [ "${MANILA_SHARE_PROTO}" != "zfs" ]; then
+        err "Protocol ${MANILA_SHARE_PROTO} not supported. Valid options are nfs, nfs-ganesha, cifs or zfs."
         exit 1
     fi
 }
@@ -106,6 +108,8 @@ configure() {
         OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS manila-nfs manila-cifs"
     elif [ "$MANILA_SHARE_PROTO" = "nfs" ]; then
         OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS manila-nfs"
+    elif [ "$MANILA_SHARE_PROTO" = "nfs-ganesha" ]; then
+        OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS manila-nfs-ganesha"
     elif [ "$MANILA_SHARE_PROTO" = "cifs" ]; then
         OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS manila-cifs"
     elif [ "$MANILA_SHARE_PROTO" = "zfs" ]; then

@@ -1,0 +1,32 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+SCRIPTDIR=$(dirname $0)
+
+# Build nfs-ganesha
+cd /usr/src
+# TODO(u_glide): Move branch to config option through "environment.d"
+git config --global http.sslVerify false
+git clone --recursive -b next https://github.com/nfs-ganesha/nfs-ganesha
+cd nfs-ganesha
+mkdir build && cd build
+cmake -DUSE_DBUS=ON ../src
+make
+make install
+
+# Set up systemd unit files for Xenial
+cp ../src/scripts/systemd/*.service /lib/systemd/system/
+sed -i '/^ExecStart.*/c\ExecStart=\/usr\/lib\/systemd\/scripts\/nfs-ganesha-config.sh' /lib/systemd/system/nfs-ganesha-config.service
+cp ../src/scripts/nfs-ganesha-config.sh /usr/lib/systemd/scripts/
+chmod 755 /usr/lib/systemd/scripts/nfs-ganesha-config.sh
+mkdir -p /etc/sysconfig
+cp ../src/scripts/systemd/sysconfig/nfs-ganesha /etc/sysconfig/ganesha
+cp ../src/scripts/ganeshactl/org.ganesha.nfsd.conf /etc/dbus-1/system.d/
+
+# Remove sources
+cd /usr/src && rm -Rf nfs-ganesha
