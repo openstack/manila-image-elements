@@ -7,8 +7,9 @@ Team and repository tags
 
 .. Change things from this point on
 
-Manila image elements project
-==============================
+=============================
+Manila Image Elements Project
+=============================
 
 This repo is a place for Manila-related diskimage-builder elements.
 
@@ -19,14 +20,40 @@ This repo is a place for Manila-related diskimage-builder elements.
 
 
 Build instructions
-------------------
+~~~~~~~~~~~~~~~~~~
+
+Before building the image, make sure all system dependencies
+listed in bindep.txt file, are installed.
+
+Default generic using tox
+-------------------------
 
 Script for creating Ubuntu based image with our elements and default parameters.
 
-Before building image make sure all system dependencies,
-listed in other-requirements.txt file, are installed.
-After it, you should only need to run this command:
+You should only need to run this command:
 
 .. sourcecode:: bash
 
     tox -e buildimage
+
+On completion, an Ubuntu minimal image with NFS will be available for use.
+
+Non-default image using tox
+---------------------------
+
+A finer-grained image creation control can be obtained by specifying extra parameters.
+Precisely, the syntax is as follows:
+
+.. sourcecode:: bash
+
+    tox -e buildimage -- -s nfs
+
+Where <share-protocol> can be nfs, cifs or zfs.
+
+For example, running:
+
+.. sourcecode:: bash
+
+    tox -e buildimage -- -s cifs
+
+Will generate an Ubuntu based image with CIFS.
