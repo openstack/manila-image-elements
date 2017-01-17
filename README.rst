@@ -36,7 +36,7 @@ You should only need to run this command:
 
     tox -e buildimage
 
-On completion, an Ubuntu minimal image with NFS will be available for use.
+On completion, an Ubuntu minimal image with NFS+CIFS will be available for use.
 
 Non-default image using tox
 ---------------------------

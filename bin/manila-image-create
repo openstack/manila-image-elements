@@ -24,7 +24,7 @@ MANILA_IMG_OS_VER=${MANILA_IMG_OS_VER:-"trusty"}
 MANILA_IMG_NAME=${MANILA_IMG_NAME:-"manila-service-image"}
 
 # Manila image creation default
-MANILA_SHARE_PROTO=${MANILA_SHARE_PROTO:-"nfs"}
+MANILA_SHARE_PROTO=${MANILA_SHARE_PROTO:-"default"}
 
 # Path to elements
 SCRIPT_HOME="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -100,7 +100,11 @@ configure() {
     OPTIONAL_ELEMENTS=
     OPTIONAL_DIB_ARGS=
 
-    if [ "$MANILA_SHARE_PROTO" = "nfs" ]; then
+    if [ "$MANILA_SHARE_PROTO" = "default" ]; then
+        # NOTE(vkmc) Generic driver uses 2 protocols by default
+        # NFS and CIFS. This is required by the gate.
+        OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS manila-nfs manila-cifs"
+    elif [ "$MANILA_SHARE_PROTO" = "nfs" ]; then
         OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS manila-nfs"
     elif [ "$MANILA_SHARE_PROTO" = "cifs" ]; then
         OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS manila-cifs"
