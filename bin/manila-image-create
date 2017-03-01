@@ -18,9 +18,9 @@ MANILA_PASSWORD=${MANILA_PASSWORD:-"manila"}
 MANILA_USER_AUTHORIZED_KEYS="None"
 
 # Manila image settings
-MANILA_IMG_ARCH=${MANILA_IMG_ARCH:-"i386"}
+MANILA_IMG_ARCH=${MANILA_IMG_ARCH:-"amd64"}
 MANILA_IMG_OS=${MANILA_IMG_OS:-"manila-ubuntu-minimal"}
-MANILA_IMG_OS_VER=${MANILA_IMG_OS_VER:-"trusty"}
+MANILA_IMG_OS_VER=${MANILA_IMG_OS_VER:-"xenial"}
 MANILA_IMG_NAME=${MANILA_IMG_NAME:-"manila-service-image"}
 
 # Manila image creation default
