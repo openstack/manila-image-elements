@@ -25,6 +25,7 @@ MANILA_IMG_NAME=${MANILA_IMG_NAME:-"manila-service-image"}
 
 # Manila image creation default
 MANILA_SHARE_PROTO=${MANILA_SHARE_PROTO:-"default"}
+MANILA_DISTRO=${MANILA_DISTRO:-"ubuntu"}
 
 # Path to elements
 SCRIPT_HOME="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -54,19 +55,28 @@ err() {
 }
 
 print_usage() {
-    echo "Usage: ${0##*/} [-s share-proto] [-h]"
+    echo "Usage: ${0##*/} [-s share-proto] [-d distro] [-h]"
     echo "Options:"
     echo " -s | --share-proto: name of the share protocol. \
          Possible options are nfs, nfs-ganesha, cifs or zfs"
+    echo " -d | --distro: name of the Linux distro. \
+         Possible options are ubuntu or centos"
     echo " -h | --help: print this usage message and exit"
     echo ""
     echo "Usage example: manila_image_elements -s nfs"
 }
 
-valid_share_protocol(){
-    if [ "${MANILA_SHARE_PROTO}" != "nfs" ] && [ "${MANILA_SHARE_PROTO}" != "nfs-ganesha" ] && 
+valid_share_protocol() {
+    if [ "${MANILA_SHARE_PROTO}" != "nfs" ] && [ "${MANILA_SHARE_PROTO}" != "nfs-ganesha" ] &&
        [ "${MANILA_SHARE_PROTO}" != "cifs" ] && [ "${MANILA_SHARE_PROTO}" != "zfs" ]; then
         err "Protocol ${MANILA_SHARE_PROTO} not supported. Valid options are nfs, nfs-ganesha, cifs or zfs."
+        exit 1
+    fi
+}
+
+valid_distro() {
+    if ["${MANILA_DISTRO}" != "ubuntu" ] && [ "${MANILA_DISTRO}" != "centos" ]; then
+        err "Distro ${MANILA_DISTRO} not supported. Valid options are ubuntu or centos."
         exit 1
     fi
 }
@@ -77,6 +87,12 @@ parse_arguments() {
             -s|--share)
                 export MANILA_SHARE_PROTO=$2
                 valid_share_protocol
+                shift 2
+            ;;
+            -d|--distro)
+                export MANILA_DISTRO=$2
+                export MANILA_IMG_OS=manila-$2-minimal
+                valid_distro
                 shift 2
             ;;
             -h|--help)
@@ -93,27 +109,24 @@ parse_arguments() {
 
 # Verify configuration
 # --------------------
-REQUIRED_ELEMENTS="manila-ssh vm $MANILA_IMG_OS dhcp-all-interfaces"
-IMAGE_FORMAT="qcow2"
-OPTIONAL_ELEMENTS=
-OPTIONAL_DIB_ARGS=
-
 configure() {
+    REQUIRED_ELEMENTS="manila-ssh vm $MANILA_IMG_OS dhcp-all-interfaces"
+    IMAGE_FORMAT="qcow2"
     OPTIONAL_ELEMENTS=
     OPTIONAL_DIB_ARGS=
 
     if [ "$MANILA_SHARE_PROTO" = "default" ]; then
         # NOTE(vkmc) Generic driver uses 2 protocols by default
         # NFS and CIFS. This is required by the gate.
-        OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS manila-nfs manila-cifs"
+        OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS ${MANILA_DISTRO}-nfs ${MANILA_DISTRO}-cifs"
     elif [ "$MANILA_SHARE_PROTO" = "nfs" ]; then
-        OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS manila-nfs"
+        OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS ${MANILA_DISTRO}-nfs"
     elif [ "$MANILA_SHARE_PROTO" = "nfs-ganesha" ]; then
-        OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS manila-nfs-ganesha"
+        OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS ${MANILA_DISTRO}-nfs-ganesha"
     elif [ "$MANILA_SHARE_PROTO" = "cifs" ]; then
-        OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS manila-cifs"
+        OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS ${MANILA_DISTRO}-cifs"
     elif [ "$MANILA_SHARE_PROTO" = "zfs" ]; then
-        OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS manila-zfs"
+        OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS ${MANILA_DISTRO}-zfs"
     fi
 
     if [ "$USE_OFFLINE_MODE" = "yes" ]; then
