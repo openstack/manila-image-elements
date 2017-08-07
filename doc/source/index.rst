@@ -4,15 +4,15 @@
    contain the root `toctree` directive.
 
 Welcome to manila-image-elements documentation!
-========================================================
+===============================================
 
 Contents:
 
 .. toctree::
    :maxdepth: 2
 
-   readme
-   contributing
+   contributor/readme
+   contributor/contributing
 
 Indices and tables
 ==================
