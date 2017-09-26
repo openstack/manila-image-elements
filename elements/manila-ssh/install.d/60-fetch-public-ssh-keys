@@ -13,6 +13,9 @@ install -D -g root -o root -m 0755 ${SCRIPTDIR}/fetch-public-ssh-keys.sh /usr/lo
 DIB_INIT_SYSTEM=$(dib-init-system)
 if [ "$DIB_INIT_SYSTEM" == "upstart" ]; then
     install -D -g root -o root -m 0755 ${SCRIPTDIR}/fetch-public-ssh-keys.conf /etc/init/fetch-public-ssh-keys.conf
+elif [ "$DIB_INIT_SYSTEM" == "systemd" ] ; then
+    install -D -g root -o root -m 0755 ${SCRIPTDIR}/fetch-public-ssh-keys.service /etc/systemd/system
+    systemctl enable fetch-public-ssh-keys
 else
     echo "Not supported"
 fi

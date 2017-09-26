@@ -1,0 +1,9 @@
+[Unit]
+Description=Fetch Public Keys
+After=network.target
+
+[Service]
+ExecStart=/usr/local/sbin/fetch-public-ssh-keys.sh
+
+[Install]
+WantedBy=multi-user.target
