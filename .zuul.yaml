@@ -1,7 +1,29 @@
 - project:
+    templates:
+      - check-requirements
+      - build-openstack-sphinx-docs
     check:
       jobs:
         - openstack-tox-lower-constraints
+        - openstack-tox-pep8
+        - legacy-manila-buildimage-generic
+        - legacy-manila-buildimage-docker:
+            voting: false
+        - manila-tempest-dsvm-container-scenario-custom-image:
+            voting: false
+            irrelevant-files:
+              - ^(test-|)requirements.txt$
+              - ^setup.cfg$
+        - manila-tempest-dsvm-generic-scenario-custom-image:
+            voting: false
+            irrelevant-files:
+              - ^(test-|)requirements.txt$
+              - ^setup.cfg$
     gate:
       jobs:
         - openstack-tox-lower-constraints
+        - openstack-tox-pep8
+        - legacy-manila-buildimage-generic
+    post:
+      jobs:
+        - legacy-manila-publishimage-generic
