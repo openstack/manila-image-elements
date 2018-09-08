@@ -1,13 +1,25 @@
+- job:
+    name: manila-image-elements-buildimage-docker
+    parent: legacy-base
+    run: playbooks/manila-buildimage-docker/run.yaml
+    timeout: 1800
+
+- job:
+    name: manila-image-elements-buildimage-generic
+    parent: legacy-base
+    run: playbooks/manila-buildimage-generic/run.yaml
+    timeout: 1800
+
 - project:
     templates:
       - check-requirements
       - build-openstack-sphinx-docs
+      - openstack-lower-constraints-jobs
     check:
       jobs:
-        - openstack-tox-lower-constraints
         - openstack-tox-pep8
-        - legacy-manila-buildimage-generic
-        - legacy-manila-buildimage-docker:
+        - manila-image-elements-buildimage-generic
+        - manila-image-elements-buildimage-docker:
             voting: false
         - manila-tempest-dsvm-container-scenario-custom-image:
             voting: false
@@ -21,9 +33,8 @@
               - ^setup.cfg$
     gate:
       jobs:
-        - openstack-tox-lower-constraints
         - openstack-tox-pep8
-        - legacy-manila-buildimage-generic
+        - manila-image-elements-buildimage-generic
     post:
       jobs:
         - legacy-manila-publishimage-generic
