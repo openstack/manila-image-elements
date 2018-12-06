@@ -25,3 +25,5 @@ if [[ $PUT_IMAGE_TO_LOCAL_WEBSERVER != [Ff][Aa][Ll][Ss][Ee] ]]; then
     echo "Image with name '$image_name' is available now at \
           http://localhost:80/public_html/$image_name"
 fi
+
+echo $image_name > ./IMAGE_NAME

@@ -160,16 +160,16 @@ is_installed() {
 need_required_packages() {
     case "$platform" in
         "ubuntu")
-            package_list="qemu kpartx"
+            package_list="qemu kpartx debootstrap"
             ;;
         "fedora")
-            package_list="qemu-img kpartx"
+            package_list="qemu-img kpartx debootstrap"
             ;;
         "opensuse")
-            package_list="qemu kpartx"
+            package_list="qemu kpartx debootstrap"
             ;;
         "rhel" | "centos")
-            package_list="qemu-kvm qemu-img kpartx"
+            package_list="qemu-kvm qemu-img kpartx debootstrap"
             ;;
         *)
             err "Unknown platform '$platform' for the package list.\nAborting"
