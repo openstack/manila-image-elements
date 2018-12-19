@@ -1,12 +1,9 @@
 #!/bin/bash -xe
 
-# 1 - First argument is expected to be type of image - either 'generic' or
-#     'docker'.
-# 2 - Second argument is expected to be boolean value that defines whether we
-#     should put newly built image to local webserver or not.
+# Argument is expected to be type of image - either 'generic' or
+# 'docker'.
 
 IMAGE=$1
-PUT_IMAGE_TO_LOCAL_WEBSERVER=${2:-"False"}
 
 if [[ "$IMAGE" == "generic"* ]]; then
     tox -v -e buildimage
@@ -14,16 +11,6 @@ if [[ "$IMAGE" == "generic"* ]]; then
 elif [[ "$IMAGE" == @(docker|container)* ]]; then
     tox -v -e buildimage-docker
     image_name="manila-docker-container.tar.gz"
-fi
-
-if [[ $PUT_IMAGE_TO_LOCAL_WEBSERVER != [Ff][Aa][Ll][Ss][Ee] ]]; then
-    source_path="$(pwd)/$image_name"
-    destination_dir="/var/www/public_html"
-    destination_path="$destination_dir/$image_name"
-    sudo mkdir -p $destination_dir
-    sudo ln -s $source_path $destination_path
-    echo "Image with name '$image_name' is available now at \
-          http://localhost:80/public_html/$image_name"
 fi
 
 echo $image_name > ./IMAGE_NAME
