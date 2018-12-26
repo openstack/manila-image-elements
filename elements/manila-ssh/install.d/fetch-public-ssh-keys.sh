@@ -9,7 +9,7 @@ MANILA_USER_SSH_DIR="$MANILA_USER_HOME/.ssh"
 if [ ! -d $MANILA_USER_SSH_DIR ]; then
     mkdir -p $MANILA_USER_SSH_DIR
     chmod 700 $MANILA_USER_SSH_DIR
-    chown -R $MANILA_USER $MANILA_USER_SSH_DIR
+    chown -R $MANILA_USER:$MANILA_USER $MANILA_USER_SSH_DIR
 fi
 
 # Fetch public key using HTTP
