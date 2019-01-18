@@ -1,49 +1,39 @@
 - hosts: all
-  name: Autoconverted job legacy-manila-buildimage-generic from old job gate-manila-buildimage-generic-ubuntu-xenial
-  roles:
-    - bindep
-
   tasks:
-
-    - name: Ensure legacy workspace directory
+    - name:  Run tools/gate/build-images generic
+      command: bash -xe tools/gate/build-images generic
+      args:
+        chdir: '{{ zuul.project.src_dir }}'
+    - name: create images directory
       file:
-        path: '{{ ansible_user_dir }}/workspace'
+        path: '{{ zuul.project.src_dir }}/images'
         state: directory
-
-    - shell:
-        cmd: |
-          set -e
-          set -x
-          CLONEMAP=`mktemp`
-          function cleanup {
-              # In cases where zuul-cloner is aborted during a git
-              # clone operation, git will remove the git work tree in
-              # its cleanup. The work tree in these jobs is the
-              # workspace directory, which means that subsequent
-              # jenkins post-build actions can not run because the
-              # workspace has been removed.
-              # To reduce the likelihood of this having an impact,
-              # recreate the workspace directory if needed
-              mkdir -p $WORKSPACE
-              rm -f $CLONEMAP
-          }
-          trap cleanup EXIT
-          cat > $CLONEMAP << EOF
-          clonemap:
-            - name: $ZUUL_PROJECT
-              dest: .
-          EOF
-          /usr/zuul-env/bin/zuul-cloner -m $CLONEMAP --cache-dir /opt/git \
-              git://git.openstack.org $ZUUL_PROJECT
-        executable: /bin/bash
-        chdir: '{{ ansible_user_dir }}/workspace'
-      environment: '{{ zuul | zuul_legacy_vars }}'
-
-    - shell:
-        cmd: |
-          set -e
-          set -x
-          ./tools/gate/build-images generic
-        executable: /bin/bash
-        chdir: '{{ ansible_user_dir }}/workspace'
-      environment: '{{ zuul | zuul_legacy_vars }}'
+        mode: 0755
+    - name: Collect git tag
+      command: git describe --tags
+      args:
+        chdir: '{{ zuul.project.src_dir }}'
+      register: tagoutput
+    - name: show directory contents after the build
+      command: ls -lrt
+      args:
+        chdir: '{{ zuul.project.src_dir }}'
+    - name: get the source directory
+      command: pwd
+      args:
+        chdir: '{{ zuul.project.src_dir }}'
+      register: src_dir
+    - name: hard link to image from images directory using tag
+      file:
+        src: '{{ src_dir.stdout }}/manila-service-image.qcow2'
+        dest: '{{ src_dir.stdout }}/images/manila-service-image-{{ tagoutput.stdout }}.qcow2'
+        state: hard
+    - name: now symlink using "master" in place of tag
+      file:
+        src: '{{ src_dir.stdout }}/images/manila-service-image-{{ tagoutput.stdout }}.qcow2'
+        dest: '{{ src_dir.stdout }}/images/manila-service-image-master.qcow2'
+        state: link
+    - name: show contents of the image directory
+      command: ls -lrt
+      args:
+        chdir: '{{ src_dir.stdout }}/images'

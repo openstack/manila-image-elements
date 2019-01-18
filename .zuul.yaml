@@ -1,15 +1,3 @@
-- job:
-    name: manila-image-elements-buildimage-docker
-    parent: legacy-base
-    run: playbooks/manila-buildimage-docker/run.yaml
-    timeout: 1800
-
-- job:
-    name: manila-image-elements-buildimage-generic
-    parent: legacy-base
-    run: playbooks/manila-buildimage-generic/run.yaml
-    timeout: 1800
-
 - project:
     templates:
       - check-requirements
@@ -37,4 +25,38 @@
         - manila-image-elements-buildimage-generic
     post:
       jobs:
-        - legacy-manila-publishimage-generic
+        - manila-image-elements-publish-artifacts
+
+- job:
+    name: manila-image-elements-buildimage-docker
+    description: |
+      Build docker image for the "container" manila back end.
+    parent: unittests
+    timeout: 1800
+    required-projects:
+      - openstack/manila-image-elements
+    run: playbooks/manila-buildimage-docker/run.yaml
+
+- job:
+    name: manila-image-elements-buildimage-generic
+    description: |
+      Build service image for the "generic" manila back end.
+    parent: unittests
+    timeout: 1800
+    required-projects:
+      - openstack/manila-image-elements
+    run: playbooks/manila-buildimage-generic/run.yaml
+
+- job:
+    name: manila-image-elements-publish-artifacts
+    description: |
+      Build image artifacts and publish to tarballs.openstack.org
+    parent: publish-openstack-artifacts
+    timeout: 3600
+    final: true
+    required-projects:
+      - openstack/manila-image-elements
+    run: playbooks/manila-buildimage-generic/run.yaml
+    post-run: playbooks/manila-publish-artifacts/post.yaml
+
+

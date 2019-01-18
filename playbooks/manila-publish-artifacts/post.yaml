@@ -1,0 +1,13 @@
+- hosts: all
+  name: Copy artifacts
+  tasks:
+    - synchronize:
+        dest: "{{ zuul.executor.work_root }}/artifacts/images/"
+        mode: pull
+        src: "{{ zuul.project.src_dir }}/images/"
+        copy_links: true
+        verify_host: true
+        rsync_opts:
+          - --filter=P, *.qcow2
+          - --include=**
+          - --delete
