@@ -1,7 +1,13 @@
 - hosts: all
   name: Copy artifacts
   tasks:
-    - synchronize:
+    - name: Ensure artifacts directory exists
+      file:
+        path: "{{ zuul.executor.work_root }}/artifacts"
+        state: directory
+      delegate_to: localhost
+    - name: Collect artifacts
+      synchronize:
         dest: "{{ zuul.executor.work_root }}/artifacts/images/"
         mode: pull
         src: "{{ zuul.project.src_dir }}/images/"
