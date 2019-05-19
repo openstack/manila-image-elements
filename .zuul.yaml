@@ -1,7 +1,7 @@
 - project:
     templates:
       - check-requirements
-      - build-openstack-sphinx-docs
+      - build-openstack-docs-pti
       - openstack-lower-constraints-jobs
     check:
       jobs:
