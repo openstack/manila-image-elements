@@ -5,7 +5,6 @@ Team and repository tags
 .. image:: https://governance.openstack.org/tc/badges/manila-image-elements.svg
     :target: https://governance.openstack.org/tc/reference/tags/index.html
 
-.. Change things from this point on
 
 =============================
 Manila Image Elements Project
@@ -14,7 +13,7 @@ Manila Image Elements Project
 This repo is a place for Manila-related diskimage-builder elements.
 
 * Free software: Apache license
-* Source: https://github.com/openstack/manila-image-elements
+* Source: https://opendev.org/openstack/manila-image-elements
 * Bugs: https://bugs.launchpad.net/manila-image-elements
 * Built Images: https://tarballs.openstack.org/manila-image-elements/images
 
