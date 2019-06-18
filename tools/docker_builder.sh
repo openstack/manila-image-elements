@@ -51,7 +51,7 @@ if ! is_docker_installed; then
         "fedora" | "rhel" | "centos")
             if [ ${platform} = "centos" ]; then
                 # install EPEL repo, in order to install argparse
-                sudo rpm -Uvh --force http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+                sudo rpm -Uvh --force https://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
             fi
             sudo yum install docker -y
             ;;
