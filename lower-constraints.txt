@@ -15,7 +15,7 @@ Jinja2==2.10
 MarkupSafe==1.0
 mccabe==0.2.1
 networkx==1.11
-openstackdocstheme==1.18.1
+openstackdocstheme==1.31.2
 pbr==2.0.0
 pep8==1.5.7
 pyflakes==0.8.1

@@ -14,7 +14,6 @@
 import os
 import sys
 
-import openstackdocstheme
 
 sys.path.insert(0, os.path.abspath('../..'))
 # -- General configuration ----------------------------------------------------
@@ -31,7 +30,6 @@ extensions = [
 repository_name = 'openstack/manila-image-elements'
 bug_project = 'manila-image-elements'
 bug_tag = 'docs'
-html_last_updated_fmt = '%Y-%m-%d %H:%M'
 
 # autodoc generation is a bit aggressive and a nuisance when doing heavy
 # text edit cycles.
@@ -63,7 +61,6 @@ pygments_style = 'sphinx'
 # Sphinx are currently 'default' and 'sphinxdoc'.
 # html_theme_path = ["."]
 html_theme = 'openstackdocs'
-html_theme_path = [openstackdocstheme.get_html_theme_path()]
 # html_static_path = ['static']
 
 # Output file base name for HTML help builder.
