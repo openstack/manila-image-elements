@@ -58,7 +58,7 @@ print_usage() {
     echo "Usage: ${0##*/} [-s share-proto] [-d distro] [-h]"
     echo "Options:"
     echo " -s | --share-proto: name of the share protocol. \
-         Possible options are nfs, nfs-ganesha, cifs or zfs"
+         Possible options are nfs, nfs-ganesha, cephfs, cifs or zfs"
     echo " -d | --distro: name of the Linux distro. \
          Possible options are ubuntu or centos"
     echo " -h | --help: print this usage message and exit"
@@ -68,8 +68,9 @@ print_usage() {
 
 valid_share_protocol() {
     if [ "${MANILA_SHARE_PROTO}" != "nfs" ] && [ "${MANILA_SHARE_PROTO}" != "nfs-ganesha" ] &&
-       [ "${MANILA_SHARE_PROTO}" != "cifs" ] && [ "${MANILA_SHARE_PROTO}" != "zfs" ]; then
-        err "Protocol ${MANILA_SHARE_PROTO} not supported. Valid options are nfs, nfs-ganesha, cifs or zfs."
+       [ "${MANILA_SHARE_PROTO}" != "cifs" ] && [ "${MANILA_SHARE_PROTO}" != "zfs" ] &&
+       [ "${MANILA_SHARE_PROTO}" != "cephfs" ]; then
+        err "Protocol ${MANILA_SHARE_PROTO} not supported. Valid options are nfs, nfs-ganesha, cephfs, cifs or zfs."
         exit 1
     fi
 }
@@ -127,6 +128,8 @@ configure() {
         OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS ${MANILA_DISTRO}-cifs"
     elif [ "$MANILA_SHARE_PROTO" = "zfs" ]; then
         OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS ${MANILA_DISTRO}-zfs"
+    elif [ "$MANILA_SHARE_PROTO" = "cephfs" ]; then
+        OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS ${MANILA_DISTRO}-cephfs"
     fi
 
     if [ "$USE_OFFLINE_MODE" = "yes" ]; then
