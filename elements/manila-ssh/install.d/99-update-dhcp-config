@@ -1,0 +1,28 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+DHCP_TIMEOUT=${DIB_DHCP_TIMEOUT:-300}
+
+if [ -f /etc/dhcp/dhclient.conf ] ; then
+    # Set the dhclient timeout configurations to match DIB_DHCP_TIMEOUT,
+    if grep -o "^timeout " /etc/dhcp/dhclient.conf ; then
+        sed -i -e "s/^timeout .*/# \"timeout\" Value set by 99-update-dhcp-config\ntimeout ${DHCP_TIMEOUT};/" /etc/dhcp/dhclient.conf
+    else
+        echo -e "# \"timeout\" Value set by 99-update-dhcp-config\ntimeout ${DHCP_TIMEOUT};" >> /etc/dhcp/dhclient.conf
+    fi
+fi
+
+DIB_INIT_SYSTEM=$(dib-init-system)
+if [ "$DIB_INIT_SYSTEM" == "systemd" ] ; then
+    sudo cp /usr/lib/systemd/system/dhcp-interface@.service \
+        /etc/systemd/system/dhcp-interface@.service
+    sudo sed -i "s/TimeoutStartSec=.*/TimeoutStartSec=${DHCP_TIMEOUT}s/" \
+        /etc/systemd/system/dhcp-interface@.service
+else
+    echo "Not supported for this init system"
+fi
