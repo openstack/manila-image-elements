@@ -56,3 +56,14 @@ For example, running:
     tox -e buildimage -- -s cifs
 
 Will generate an Ubuntu based image with CIFS.
+
+Configurable variables
+----------------------
+
+You can override some build variables from ``manila-image-create``, for example:
+
+.. sourcecode:: bash
+
+    export DHCP_TIMEOUT=600
+    export MANILA_PASSWORD=PASSWORD
+    tox -e buildimage
