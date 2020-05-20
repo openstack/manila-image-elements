@@ -6,3 +6,4 @@ iptables:
 inetutils-ping:
 net-tools:
 python:
+qemu-guest-agent:

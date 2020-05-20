@@ -6,3 +6,4 @@ iptables:
 iputils:
 net-tools:
 python:
+qemu-guest-agent:
