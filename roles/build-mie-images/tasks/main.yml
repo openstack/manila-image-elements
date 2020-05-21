@@ -1,0 +1,53 @@
+---
+- name: build the requested images
+  command: bash -xe tools/gate/build-images {{ item }}
+  args:
+    chdir: "{{ zuul.project.src_dir }}"
+  with_items: "{{ images_to_build }}"
+- name: create images directory
+  file:
+    path: "{{ zuul.project.src_dir }}/images"
+    state: directory
+    mode: 0755
+- name: collect git tag
+  command: git describe --tags
+  args:
+    chdir: "{{ zuul.project.src_dir }}"
+  register: tagoutput
+- name: show directory contents after the build
+  command: ls -lrt
+  args:
+    chdir: "{{ zuul.project.src_dir }}"
+- name: get the source directory
+  command: pwd
+  args:
+    chdir: '{{ zuul.project.src_dir }}'
+  register: src_dir
+- name: grab all images built
+  find:
+    paths: "{{ src_dir.stdout }}"
+    patterns: '*.qcow2'
+    file_type: file
+  register: images_built
+- name: hard link images into the images directory using the git tag
+  file:
+    src: "{{ item.path }}"
+    dest: "{{ src_dir.stdout }}/images/{{ item.path | basename | splitext | first }}-{{ tagoutput.stdout }}.qcow2"
+    state: hard
+  with_items: "{{ images_built.files }}"
+- name: grab the tagged images
+  find:
+    paths: "{{ src_dir.stdout }}/images"
+    patterns: "*.qcow2"
+    file_type: file
+  register: images_tagged
+- name: create "master" symlinks for these images
+  file:
+    src: "{{ item.path }}"
+    dest: "{{ src_dir.stdout }}/images/{{ item.path | basename | regex_replace('\\d+.*qcow2', 'master.qcow2') }}"
+    state: link
+  with_items: "{{ images_tagged.files }}"
+- name: get contents of the images directory
+  command: ls -lrt
+  args:
+    chdir: "{{ zuul.project.src_dir }}/images/"

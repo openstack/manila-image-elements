@@ -1,0 +1,4 @@
+---
+images_to_build:
+  - cephfs
+  - generic
