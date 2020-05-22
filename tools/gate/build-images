@@ -1,7 +1,9 @@
 #!/bin/bash -xe
 
-# Argument is expected to be type of image - either 'generic' or
-# 'docker'.
+# Argument is expected to be type of image. Use 'generic' to build an image
+# with NFS and CIFS for use with Manila's Generic driver. Or specify a
+# protocol (ex: cephfs) to build an image with protocol specific packages,
+# or use "docker" to build a container image for use with the Container driver.
 
 IMAGE=$1
 
@@ -11,6 +13,10 @@ if [[ "$IMAGE" == "generic"* ]]; then
 elif [[ "$IMAGE" == @(docker|container)* ]]; then
     tox -v -e buildimage-docker
     image_name="manila-docker-container.tar.gz"
+else
+    export MANILA_IMG_NAME="manila-service-image-$IMAGE"
+    tox -v -e buildimage -- -s $IMAGE
+    image_name="$MANILA_IMG_NAME.qcow2"
 fi
 
 echo $image_name > ./IMAGE_NAME

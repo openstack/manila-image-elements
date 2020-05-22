@@ -6,7 +6,7 @@
     check:
       jobs:
         - openstack-tox-pep8
-        - manila-image-elements-buildimage-generic
+        - manila-image-elements-buildimages
         - manila-image-elements-buildimage-docker:
             voting: false
         - manila-tempest-dsvm-container-scenario-custom-image:
@@ -22,7 +22,7 @@
     gate:
       jobs:
         - openstack-tox-pep8
-        - manila-image-elements-buildimage-generic
+        - manila-image-elements-buildimages
     post:
       jobs:
         - manila-image-elements-publish-artifacts
@@ -38,14 +38,15 @@
     run: playbooks/manila-buildimage-docker/run.yaml
 
 - job:
-    name: manila-image-elements-buildimage-generic
+    name: manila-image-elements-buildimages
     description: |
-      Build service image for the "generic" manila back end.
+      Build service image for the "generic" manila back end, and any other
+      images specified in the role "build-mie-images"
     parent: unittests
     timeout: 1800
     required-projects:
       - openstack/manila-image-elements
-    run: playbooks/manila-buildimage-generic/run.yaml
+    run: playbooks/manila-buildimages/run.yaml
 
 - job:
     name: manila-image-elements-publish-artifacts
@@ -56,7 +57,5 @@
     final: true
     required-projects:
       - openstack/manila-image-elements
-    run: playbooks/manila-buildimage-generic/run.yaml
+    run: playbooks/manila-buildimages/run.yaml
     post-run: playbooks/manila-publish-artifacts/post.yaml
-
-
