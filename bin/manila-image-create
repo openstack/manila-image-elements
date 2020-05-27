@@ -129,7 +129,7 @@ configure() {
     elif [ "$MANILA_SHARE_PROTO" = "zfs" ]; then
         OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS ${MANILA_DISTRO}-zfs"
     elif [ "$MANILA_SHARE_PROTO" = "cephfs" ]; then
-        OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS ${MANILA_DISTRO}-cephfs"
+        OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS cephfs"
     fi
 
     if [ "$USE_OFFLINE_MODE" = "yes" ]; then
