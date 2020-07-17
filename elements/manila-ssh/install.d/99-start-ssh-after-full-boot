@@ -1,0 +1,24 @@
+#!/bin/bash
+
+if [ ${DIB_DEBUG_TRACE:-0} -gt 0 ]; then
+    set -x
+fi
+set -eu
+set -o pipefail
+
+DIB_INIT_SYSTEM=$(dib-init-system)
+if [ "$DIB_INIT_SYSTEM" == "systemd" ]; then
+    POSSIBLE_NAMES=("ssh" "sshd")
+    for SERVICE_NAME in "${POSSIBLE_NAMES[@]}"; do
+        if [ -f "/lib/systemd/system/$SERVICE_NAME.service" ]; then
+            sudo cp /lib/systemd/system/$SERVICE_NAME.service \
+                /etc/systemd/system/$SERVICE_NAME.service
+            sudo sed -i "/^After=/ s/$/ multi-user.target/" \
+                /etc/systemd/system/$SERVICE_NAME.service
+            sudo sed -i "s/^WantedBy=multi-user.target//" \
+                /etc/systemd/system/$SERVICE_NAME.service
+        fi
+    done
+else
+    echo "Not supported for this init system"
+fi
