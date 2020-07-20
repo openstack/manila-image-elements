@@ -1,4 +1,7 @@
 - hosts: all
+  roles:
+    - role: ensure-tox
+      ensure_global_symlinks: true
   tasks:
     - name:  Run tools/gate/build-images docker
       command: bash -xe tools/gate/build-images docker
