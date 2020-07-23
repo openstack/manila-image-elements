@@ -1,0 +1,7 @@
+- hosts: all
+  roles:
+    - role: ensure-tox
+      ensure_global_symlinks: true
+    - role: build-mie-images
+      images_to_build:
+        - generic

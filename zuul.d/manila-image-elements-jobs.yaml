@@ -1,32 +1,3 @@
-- project:
-    templates:
-      - check-requirements
-      - build-openstack-docs-pti
-      - openstack-lower-constraints-jobs
-    check:
-      jobs:
-        - openstack-tox-pep8
-        - manila-image-elements-buildimages
-        - manila-image-elements-buildimage-docker:
-            voting: false
-        - manila-tempest-dsvm-container-scenario-custom-image:
-            voting: false
-            irrelevant-files:
-              - ^(test-|)requirements.txt$
-              - ^setup.cfg$
-        - manila-tempest-dsvm-generic-scenario-custom-image:
-            voting: false
-            irrelevant-files:
-              - ^(test-|)requirements.txt$
-              - ^setup.cfg$
-    gate:
-      jobs:
-        - openstack-tox-pep8
-        - manila-image-elements-buildimages
-    post:
-      jobs:
-        - manila-image-elements-publish-artifacts
-
 - job:
     name: manila-image-elements-buildimage-docker
     description: |
@@ -51,7 +22,7 @@
 - job:
     name: manila-image-elements-publish-artifacts
     description: |
-      Build image artifacts and publish to tarballs.openstack.org
+      Build image artifacts and publish to tarba.lls.openstack.org.
     parent: publish-openstack-artifacts
     timeout: 3600
     final: true
@@ -59,3 +30,19 @@
       - openstack/manila-image-elements
     run: playbooks/manila-buildimages/run.yaml
     post-run: playbooks/manila-publish-artifacts/post.yaml
+
+- job:
+    name: manila-image-elements-generic-scenario
+    parent: manila-tempest-plugin-generic
+    pre-run: playbooks/manila-buildimages/run-generic-scenario.yaml
+    required-projects:
+      - openstack/manila-image-elements
+      - openstack/manila
+      - openstack/manila-tempest-plugin
+      - openstack/python-manilaclient
+      - openstack/tempest
+    vars:
+      tempest_test_regex: '^manila_tempest_tests.tests.scenario(?=.*\btest_write_data_to_share_created_from_snapshot\b.*)'
+      devstack_localrc:
+        MANILA_SERVICE_IMAGE_URL: "file:///home/zuul/src/opendev.org/openstack/manila-image-elements/manila-service-image.qcow2"
+        MANILA_SERVICE_IMAGE_NAME: manila-service-image
