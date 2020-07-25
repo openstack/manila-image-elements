@@ -2,26 +2,26 @@
 - name: build the requested images
   command: bash -xe tools/gate/build-images {{ item }}
   args:
-    chdir: "{{ zuul.project.src_dir }}"
+    chdir: "{{ mie_project_path }}"
   with_items: "{{ images_to_build }}"
 - name: create images directory
   file:
-    path: "{{ zuul.project.src_dir }}/images"
+    path: "{{ mie_project_path }}/images"
     state: directory
     mode: 0755
 - name: collect git tag
   command: git describe --tags
   args:
-    chdir: "{{ zuul.project.src_dir }}"
+    chdir: "{{ mie_project_path }}"
   register: tagoutput
 - name: show directory contents after the build
   command: ls -lrt
   args:
-    chdir: "{{ zuul.project.src_dir }}"
+    chdir: "{{ mie_project_path }}"
 - name: get the source directory
   command: pwd
   args:
-    chdir: '{{ zuul.project.src_dir }}'
+    chdir: '{{ mie_project_path }}'
   register: src_dir
 - name: grab all images built
   find:
@@ -50,4 +50,4 @@
 - name: get contents of the images directory
   command: ls -lrt
   args:
-    chdir: "{{ zuul.project.src_dir }}/images/"
+    chdir: "{{ mie_project_path }}/images/"

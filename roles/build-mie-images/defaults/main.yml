@@ -1,4 +1,5 @@
 ---
+mie_project_path: "{{ zuul.projects['opendev.org/openstack/manila-image-elements'].src_dir }}"
 images_to_build:
   - cephfs
   - generic

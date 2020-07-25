@@ -33,6 +33,7 @@ AUTHORS
 diskimage-create.*
 debug.sh
 /*.d
+!zuul.d/
 
 # Files created by Sphinx build
 build
