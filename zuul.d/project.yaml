@@ -8,7 +8,7 @@
         - openstack-tox-pep8
         - manila-image-elements-buildimages
         - manila-image-elements-buildimage-docker
-        - manila-tempest-dsvm-container-scenario-custom-image:
+        - manila-image-elements-container-scenario:
             voting: false
             irrelevant-files: &irrelevant-files
               - ^(test-|)requirements.txt$

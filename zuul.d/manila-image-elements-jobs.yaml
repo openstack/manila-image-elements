@@ -32,6 +32,25 @@
     post-run: playbooks/manila-publish-artifacts/post.yaml
 
 - job:
+    name: manila-image-elements-container-scenario
+    parent: manila-tempest-plugin-container
+    pre-run: playbooks/manila-buildimage-docker/run.yaml
+    required-projects:
+      - openstack/manila-image-elements
+      - openstack/manila
+      - openstack/manila-tempest-plugin
+      - openstack/python-manilaclient
+      - openstack/tempest
+    vars:
+      # NOTE(gouthamr): Not running scenario tests yet, need to test them
+      # against the container driver first
+      tempest_test_regex: '(^manila_tempest_tests.tests)(?=.*\[.*\bbackend\b.*\])'
+      devstack_localrc:
+        # "docker build" uploads the image we need to the local registry
+        # manila's devstack plugin just needs the name of the image to look up
+        MANILA_DOCKER_IMAGE_URL: "file:///home/zuul/src/opendev.org/openstack/manila-image-elements/manila-docker-container.tar.gz"
+
+- job:
     name: manila-image-elements-generic-scenario
     parent: manila-tempest-plugin-generic
     pre-run: playbooks/manila-buildimages/run-generic-scenario.yaml
