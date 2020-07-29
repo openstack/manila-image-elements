@@ -20,7 +20,7 @@ MANILA_USER_AUTHORIZED_KEYS="None"
 # Manila image settings
 MANILA_IMG_ARCH=${MANILA_IMG_ARCH:-"amd64"}
 MANILA_IMG_OS=${MANILA_IMG_OS:-"manila-ubuntu-minimal"}
-MANILA_IMG_OS_VER=${MANILA_IMG_OS_VER:-"bionic"}
+MANILA_IMG_OS_VER=${MANILA_IMG_OS_VER:-"focal"}
 MANILA_IMG_NAME=${MANILA_IMG_NAME:-"manila-service-image"}
 
 # Manila image creation default
