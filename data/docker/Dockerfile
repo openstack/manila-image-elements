@@ -1,6 +1,6 @@
 FROM phusion/baseimage:0.9.18
 
-EXPOSE 111 2049 60934 43440 55392 53559 875
+EXPOSE 111 2049 60934 43440 55392 53559 875 389 636
 
 CMD ["/sbin/my_init"]
 
@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y \
       doxygen \
       flex \
       git-core \
+      ldap-utils \
       libcephfs-dev \
       libdbus-1-dev \
       libgssglue-dev \
@@ -28,6 +29,7 @@ RUN apt-get update && apt-get install -y \
       portmap \
       python-dbus \
       samba \
+      slapd \
       smbclient \
       uuid-dev &&\
     mkdir -p /shares &&\
@@ -56,6 +58,7 @@ RUN apt-get update && apt-get install -y \
     mkdir -p /etc/service/ganesha &&\
     mkdir -p /etc/service/samba &&\
     mkdir -p /etc/service/dbus &&\
+    mkdir -p /etc/service/slapd &&\
     apt-get purge -y \
       bison \
       build-essential \
@@ -92,3 +95,4 @@ ADD rpcbind.sh /etc/service/rpcbind/run
 ADD ganesha.sh /etc/service/ganesha/run
 ADD ganesha.conf /etc/ganesha/ganesha.conf
 ADD samba.sh /etc/service/samba/run
+ADD slapd.sh /etc/service/slapd/run
