@@ -2,7 +2,6 @@
     templates:
       - check-requirements
       - build-openstack-docs-pti
-      - openstack-lower-constraints-jobs
     check:
       jobs:
         - openstack-tox-pep8
