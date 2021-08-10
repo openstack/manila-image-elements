@@ -21,7 +21,7 @@ chmod 0440 /etc/sudoers.d/${DIB_MANILA_USER_USERNAME}
 visudo -c || rm /etc/sudoers.d/${DIB_MANILA_USER_USERNAME}
 
 
-if [ -f /tmp/in_target.d/devuser-ssh-authorized-keys ]; then
+if [ -f /tmp/in_target.d/manilauser-ssh-authorized-keys ]; then
     mkdir -p /home/${DIB_MANILA_USER_USERNAME}/.ssh
     cp /tmp/in_target.d/manilauser-ssh-authorized-keys /home/${DIB_MANILA_USER_USERNAME}/.ssh/authorized_keys
 fi
