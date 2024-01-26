@@ -49,11 +49,18 @@ if ! is_docker_installed; then
             sudo zypper --non-interactive --gpg-auto-import-keys in docker
             ;;
         "fedora" | "rhel" | "centos")
-            if [ ${platform} = "centos" ]; then
-                # install EPEL repo, in order to install argparse
-                sudo rpm -Uvh --force https://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+            if type "dnf" 2>/dev/null;then
+                export YUM=dnf
+            else
+                export YUM=yum
             fi
-            sudo yum install docker -y
+
+            # install EPEL repo, in order to install argparse
+            if [ ${platform} = "centos" ]; then
+                sudo sudo $YUM install -y epel-release
+            fi
+
+            sudo $YUM install docker -y
             ;;
         *)
             echo -e "Unknown platform '$platform' for installing packages.\nAborting"
