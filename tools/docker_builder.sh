@@ -50,9 +50,9 @@ if ! is_docker_installed; then
             ;;
         "fedora" | "rhel" | "centos")
             if type "dnf" 2>/dev/null;then
-                export YUM=dnf
+                YUM=dnf
             else
-                export YUM=yum
+                YUM=yum
             fi
 
             # install EPEL repo, in order to install argparse
