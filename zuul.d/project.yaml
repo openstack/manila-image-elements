@@ -6,7 +6,8 @@
       jobs:
         - openstack-tox-pep8
         - manila-image-elements-buildimages
-        - manila-image-elements-buildimage-docker
+        - manila-image-elements-buildimage-docker:
+            voting: false
         - manila-image-elements-container-scenario:
             voting: false
             irrelevant-files: &irrelevant-files
