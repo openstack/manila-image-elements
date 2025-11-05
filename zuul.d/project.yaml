@@ -23,6 +23,9 @@
       jobs:
         - openstack-tox-pep8
         - manila-image-elements-buildimages
+    periodic:
+      jobs:
+        - manila-image-elements-publish-artifacts
     post:
       jobs:
         - manila-image-elements-publish-artifacts
