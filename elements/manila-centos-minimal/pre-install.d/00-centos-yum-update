@@ -6,4 +6,4 @@ fi
 set -eu
 set -o pipefail
 
-yum -y update
+dnf -y update

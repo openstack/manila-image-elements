@@ -44,7 +44,6 @@ export ELEMENTS_PATH=$_PREFIX/elements
 
 # diskimage-builder general settings
 export DIB_DEFAULT_INSTALLTYPE=package
-export DIB_RELEASE=$MANILA_IMG_OS_VER
 
 # diskimage-builder user settings
 export DIB_MANILA_USER_USERNAME=$MANILA_USER
@@ -73,14 +72,14 @@ print_usage() {
 valid_share_protocol() {
     if [ "${MANILA_SHARE_PROTO}" != "nfs" ] && [ "${MANILA_SHARE_PROTO}" != "nfs-ganesha" ] &&
        [ "${MANILA_SHARE_PROTO}" != "cifs" ] && [ "${MANILA_SHARE_PROTO}" != "zfs" ] &&
-       [ "${MANILA_SHARE_PROTO}" != "cephfs" ]; then
-        err "Protocol ${MANILA_SHARE_PROTO} not supported. Valid options are nfs, nfs-ganesha, cephfs, cifs or zfs."
+       [ "${MANILA_SHARE_PROTO}" != "cephfs" ] && [ "${MANILA_SHARE_PROTO}" != "lustre" ]; then
+        err "Protocol ${MANILA_SHARE_PROTO} not supported. Valid options are nfs, nfs-ganesha, cephfs, cifs, zfs or lustre."
         exit 1
     fi
 }
 
 valid_distro() {
-    if ["${MANILA_DISTRO}" != "ubuntu" ] && [ "${MANILA_DISTRO}" != "centos" ]; then
+    if [ "${MANILA_DISTRO}" != "ubuntu" ] && [ "${MANILA_DISTRO}" != "centos" ]; then
         err "Distro ${MANILA_DISTRO} not supported. Valid options are ubuntu or centos."
         exit 1
     fi
@@ -97,6 +96,9 @@ parse_arguments() {
             -d|--distro)
                 export MANILA_DISTRO=$2
                 export MANILA_IMG_OS=manila-$2-minimal
+                if [ "$2" = "centos" ]; then
+                    export MANILA_IMG_OS_VER="9-stream"
+                fi
                 valid_distro
                 shift 2
             ;;
@@ -115,6 +117,7 @@ parse_arguments() {
 # Verify configuration
 # --------------------
 configure() {
+    export DIB_RELEASE=$MANILA_IMG_OS_VER
     REQUIRED_ELEMENTS="manila-ssh vm $MANILA_IMG_OS dhcp-all-interfaces"
     IMAGE_FORMAT="qcow2"
     OPTIONAL_ELEMENTS=
@@ -134,6 +137,8 @@ configure() {
         OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS ${MANILA_DISTRO}-zfs"
     elif [ "$MANILA_SHARE_PROTO" = "cephfs" ]; then
         OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS cephfs"
+    elif [ "$MANILA_SHARE_PROTO" = "lustre" ]; then
+        OPTIONAL_ELEMENTS="$OPTIONAL_ELEMENTS lustre"
     fi
 
     if [ "$USE_OFFLINE_MODE" = "yes" ]; then
@@ -176,7 +181,7 @@ need_required_packages() {
             package_list="qemu kpartx debootstrap"
             ;;
         "rhel" | "centos")
-            package_list="qemu-kvm qemu-img kpartx debootstrap"
+            package_list="qemu-img kpartx"
             ;;
         *)
             err "Unknown platform '$platform' for the package list.\nAborting"

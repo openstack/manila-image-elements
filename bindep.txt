@@ -1,2 +1,5 @@
 # Package 'debootstrap' is required for 'ubuntu-minimal' element.
-debootstrap
+debootstrap [platform:dpkg]
+# Packages needed for building CentOS-based images on EL hosts.
+qemu-img [platform:rpm]
+kpartx [platform:rpm]

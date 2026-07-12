@@ -93,6 +93,30 @@
     post-run: playbooks/manila-publish-artifacts/post.yaml
 
 - job:
+    name: manila-image-elements-buildimage-lustre
+    description: |
+      Build the Lustre service image (CentOS 9 guest).
+      Runs on Ubuntu; dnf and rpm are installed for the
+      yum-minimal chroot bootstrap.
+    parent: base
+    timeout: 3600
+    required-projects:
+      - openstack/manila-image-elements
+    run: playbooks/manila-buildimages/run-lustre.yaml
+
+- job:
+    name: manila-image-elements-publish-lustre
+    description: |
+      Build and publish Lustre service image to tarballs.opendev.org.
+    parent: publish-openstack-artifacts
+    timeout: 3600
+    final: true
+    required-projects:
+      - openstack/manila-image-elements
+    run: playbooks/manila-buildimages/run-lustre.yaml
+    post-run: playbooks/manila-publish-artifacts/post.yaml
+
+- job:
     name: manila-image-elements-container-scenario
     parent: manila-tempest-plugin-container
     pre-run: playbooks/manila-buildimage-docker/run.yaml

@@ -1,0 +1,50 @@
+- hosts: all
+  roles:
+    - role: ensure-tox
+      ensure_global_symlinks: true
+    - role: ensure-dib
+  tasks:
+    - name: Build Lustre image
+      command: bash -xe tools/gate/build-images lustre
+      args:
+        chdir: "{{ zuul.projects['opendev.org/openstack/manila-image-elements'].src_dir }}"
+
+    - name: Create images directory
+      file:
+        path: "{{ zuul.projects['opendev.org/openstack/manila-image-elements'].src_dir }}/images"
+        state: directory
+        mode: '0755'
+
+    - name: Get git tag
+      command: git describe --tags
+      args:
+        chdir: "{{ zuul.projects['opendev.org/openstack/manila-image-elements'].src_dir }}"
+      register: tagoutput
+
+    - name: Find built images
+      find:
+        paths: "{{ zuul.projects['opendev.org/openstack/manila-image-elements'].src_dir }}"
+        patterns: '*.qcow2'
+        file_type: file
+      register: images_built
+
+    - name: Link images with git tag
+      file:
+        src: "{{ item.path }}"
+        dest: "{{ zuul.projects['opendev.org/openstack/manila-image-elements'].src_dir }}/images/{{ item.path | basename | splitext | first }}-{{ tagoutput.stdout }}.qcow2"
+        state: hard
+      with_items: "{{ images_built.files }}"
+
+    - name: Find tagged images
+      find:
+        paths: "{{ zuul.projects['opendev.org/openstack/manila-image-elements'].src_dir }}/images"
+        patterns: '*.qcow2'
+        file_type: file
+      register: images_tagged
+
+    - name: Create master symlinks
+      file:
+        src: "{{ item.path | basename }}"
+        dest: "{{ zuul.projects['opendev.org/openstack/manila-image-elements'].src_dir }}/images/{{ item.path | basename | regex_replace('\\d+.*qcow2', 'master.qcow2') }}"
+        state: link
+      with_items: "{{ images_tagged.files }}"

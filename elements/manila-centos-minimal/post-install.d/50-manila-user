@@ -7,5 +7,5 @@ set -eu
 set -o pipefail
 
 # Set 'bash' as default shell for 'manila' user.
-useradd -m manila -s /bin/bash
-passwd manila
+id manila 2>/dev/null || useradd -m manila -s /bin/bash
+echo manila:manila | chpasswd

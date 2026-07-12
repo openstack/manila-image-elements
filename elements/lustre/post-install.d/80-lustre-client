@@ -1,0 +1,67 @@
+#!/bin/bash
+
+set -eu
+set -o pipefail
+
+if [ ! -f /etc/redhat-release ]; then
+    echo "CentOS/RHEL only"
+    exit 1
+fi
+
+LUSTRE_VERSION="${LUSTRE_VERSION:-2.17.0}"
+EL_VERSION="${EL_VERSION:-el9.7}"
+
+LUSTRE_SERVER_URL="https://downloads.whamcloud.com/public/lustre/lustre-${LUSTRE_VERSION}/${EL_VERSION}/server/"
+E2FS_URL="https://downloads.whamcloud.com/public/e2fsprogs/latest/el9/"
+
+cat > /etc/yum.repos.d/lustre-whamcloud.repo <<REPO
+[lustre-server-whamcloud]
+name=Lustre Server (Whamcloud)
+baseurl=${LUSTRE_SERVER_URL}
+gpgcheck=0
+enabled=1
+
+[lustre-e2fsprogs-whamcloud]
+name=e2fsprogs for Lustre (Whamcloud)
+baseurl=${E2FS_URL}
+gpgcheck=0
+enabled=1
+REPO
+
+# Install only the Lustre-patched kernel packages needed for a client
+echo "Installing Lustre-patched kernel..."
+dnf install -y \
+    "kernel-core-*_lustre*" \
+    "kernel-modules-*_lustre*" \
+    "kernel-modules-core-*_lustre*" \
+    --exclude='kernel-rt*' \
+    --exclude='kernel-debuginfo*' \
+    --exclude='kernel-selftests*' \
+    --exclude='kernel-devel*' \
+    --exclude='kernel-cross-headers*' \
+    --exclude='kernel-headers*' \
+    --exclude='kernel-modules-extra*' \
+    --exclude='kernel-modules-internal*' \
+    --exclude='kernel-modules-partner*'
+
+# Install userspace tools
+echo "Installing Lustre client tools..."
+dnf install -y lustre
+
+# Remove all non-Lustre kernels
+for pkg in $(rpm -qa 'kernel-*' | grep -v _lustre | grep -v 'kernel-srpm'); do
+    echo "Removing $pkg..."
+    rpm -e --nodeps "$pkg" 2>/dev/null || true
+done
+
+# Set Lustre kernel as default boot
+LUSTRE_VMLINUZ=$(ls -1 /boot/vmlinuz-*_lustre* 2>/dev/null | head -1)
+if [ -n "$LUSTRE_VMLINUZ" ]; then
+    grubby --set-default "$LUSTRE_VMLINUZ"
+    echo "Default kernel: $LUSTRE_VMLINUZ"
+fi
+
+# Auto-load lustre module at boot
+echo lustre > /etc/modules-load.d/lustre.conf
+
+echo "Lustre client installation complete"

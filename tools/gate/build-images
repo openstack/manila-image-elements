@@ -15,7 +15,13 @@ elif [[ "$IMAGE" == @(docker|container)* ]]; then
     image_name="manila-docker-container.tar.gz"
 else
     export MANILA_IMG_NAME="manila-service-image-$IMAGE"
-    tox -v -e buildimage -- -s $IMAGE
+    EXTRA_ARGS=""
+    TOX_OVERRIDE=""
+    if [[ "$IMAGE" == "lustre" ]]; then
+        EXTRA_ARGS="-d centos"
+        export DIB_YUM_MINIMAL_BOOTSTRAP_PACKAGES="bash"
+    fi
+    tox -v -e buildimage $TOX_OVERRIDE -- -s $IMAGE $EXTRA_ARGS
     image_name="$MANILA_IMG_NAME.qcow2"
 fi
 
