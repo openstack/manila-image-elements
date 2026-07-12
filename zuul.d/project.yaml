@@ -6,6 +6,7 @@
       jobs:
         - openstack-tox-pep8
         - manila-image-elements-buildimages
+        - manila-image-elements-build-container
         - manila-image-elements-buildimage-docker:
             voting: false
         - manila-image-elements-container-scenario:
@@ -29,3 +30,4 @@
     post:
       jobs:
         - manila-image-elements-publish-artifacts
+        - manila-image-elements-upload-container

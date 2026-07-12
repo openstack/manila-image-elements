@@ -1,0 +1,4 @@
+- hosts: all
+  roles:
+    - ensure-podman
+    - upload-container-image

@@ -1,3 +1,64 @@
+- secret:
+    name: manila_quay_io_creds
+    data:
+      quay.io:
+        username: !encrypted/pkcs1-oaep
+          - F5O34izk9/frmKqmN2Z73BEseRZuMxos5W1m5Vf/7gFuliK2fEg/uMUpS6Os7u7gQ1B4O
+            /jmZbF0d7R8E1XdZlnY9djub8TdNzOqrrOZWFjXTQ02iA2Cq1b0+HDknDtviRGaUCTnGx
+            El1g4LgOGnoaZJZ0mKtfH72PIhor3PZZj1ni6KTI5P83HpWY/3Y2mDFjXzevix8KkL4gq
+            k6sTYpcwdNdKyqcJQv6U71JbRh/JjHsBrJxKIEJ+4PPyXHTq1tdOvg9smf+5fCSTBXoTj
+            Byng6+FanEH5a/xapEqphJ1AMyAUCW/eRhjlcO7d7tXWHdBI9gOacyNRIDrCNheytWYmM
+            N1y35otqHLT3tMZb9VuFz6ElA8faRnW91/FVrkeDBhVjSeyhsfMiavZoOSWhL0qGZCadD
+            Y8RMy/Ys3enZrSQJFHrsfLg3CnCiWWwRAU6SrkoxaHJkCRGcVSW+Qy/lzctwWrSwe/wp4
+            AKFi+BgsYihWolq0p7cJPHzoUhOXUsooc16yKCXOTaniiPKDOmmY80tV69jbTGf58DCoH
+            PjGu33kujl6ybgeV2shfdSFppapO1wjJnkHkCtyQZxQAN+EtMXa8NzncR9egYiutbb42n
+            gqwRB83tqPI4Lra/Yuo2lAk8MP+8VwxTt3niIzFvO/ZVromJ+Vuw8MZEW0Z3B0=
+        password: !encrypted/pkcs1-oaep
+          - JhWna1Uvc0DXFoftcyM1669iulQko+r06Ci2OC/RQ5nkZgqxG4K912iHmM0sR9SXCc9b0
+            cMkUa5/yZvyfApRJ0RDbI4k+0VdNjrp2zDocvmP1XfFoxOY6pJ7HRFc3L9p2p2a9mryxZ
+            7O+kTNY0A+dwaGxuqIlasKM3z1BZRpIpYO+QH7x/vNxmRXNxOd+SrY1Nm9H/Klr7SaK8x
+            tsFBMWqu4Yyc+LTNYRwUvGwnEIHDe5FLi8re8hfwLf/kN+HaPh9dWThufk5SGFBVTmnfF
+            5yXHIVU+oAFmO8U5qHvqCLD7vlVMyMLfZtUHev771DLm3zsc/hBuzEYnoAq5NP9MARJnF
+            ORuLnujyX8cxv8JYzjckcfvTSdNtTWjSGlvgRn+XDqLQrXDYGxNj+/MPVs/nn/8l37nZU
+            Fkp+6PLvwLIyesbOkdCK84PbjFInvMn/pHW09B82IR6amqe/mqJVA2eFbH7xWktTV8Mts
+            VI2mmi+H7kl9KEMfKCZnpXihivwoI240ghbQ2gM9FBCKlrmO/EGhZHY34VHETfFN8OsIx
+            2H/2bP/wOsnSl5K5L3jxvjYmlhlu76kM3EwiYtSxnu9uQusqeCfWDnCawSoR1iYef9KB5
+            LpelG0L4hl3LFPd121qL1g1mOOGVwCFIAHEvAqOwJEgVVq54SDjXaSeJPSXOJc=
+
+- job:
+    name: manila-image-elements-build-container
+    description: |
+      Build the container image for the manila container driver.
+    parent: base
+    timeout: 1800
+    required-projects:
+      - openstack/manila-image-elements
+    run: playbooks/container-image-build.yaml
+    vars: &container_image_vars
+      container_images:
+        - context: data/docker
+          registry: quay.io
+          repository: quay.io/openstack-manila/manila-docker-container
+          tags:
+            - latest
+
+- job:
+    name: manila-image-elements-upload-container
+    description: |
+      Build and push the container image to quay.io.
+    parent: base
+    timeout: 1800
+    required-projects:
+      - openstack/manila-image-elements
+    run: playbooks/container-image-upload.yaml
+    secrets:
+      - name: container_registry_credentials
+        secret: manila_quay_io_creds
+        pass-to-parent: true
+    vars:
+      <<: *container_image_vars
+      upload_container_image_promote: false
+
 - job:
     name: manila-image-elements-buildimage-docker
     description: |
