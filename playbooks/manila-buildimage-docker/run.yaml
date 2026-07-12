@@ -1,9 +1,8 @@
 - hosts: all
   roles:
-    - role: ensure-tox
-      ensure_global_symlinks: true
+    - ensure-podman
   tasks:
-    - name:  Run tools/gate/build-images docker
-      command: bash -xe tools/gate/build-images docker
+    - name: Build container image
+      command: bash -xe tools/docker_builder.sh
       args:
         chdir: '{{ zuul.project.src_dir }}'
