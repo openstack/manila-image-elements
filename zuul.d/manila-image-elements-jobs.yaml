@@ -3,27 +3,27 @@
     data:
       quay.io:
         username: !encrypted/pkcs1-oaep
-          - F5O34izk9/frmKqmN2Z73BEseRZuMxos5W1m5Vf/7gFuliK2fEg/uMUpS6Os7u7gQ1B4O
-            /jmZbF0d7R8E1XdZlnY9djub8TdNzOqrrOZWFjXTQ02iA2Cq1b0+HDknDtviRGaUCTnGx
-            El1g4LgOGnoaZJZ0mKtfH72PIhor3PZZj1ni6KTI5P83HpWY/3Y2mDFjXzevix8KkL4gq
-            k6sTYpcwdNdKyqcJQv6U71JbRh/JjHsBrJxKIEJ+4PPyXHTq1tdOvg9smf+5fCSTBXoTj
-            Byng6+FanEH5a/xapEqphJ1AMyAUCW/eRhjlcO7d7tXWHdBI9gOacyNRIDrCNheytWYmM
-            N1y35otqHLT3tMZb9VuFz6ElA8faRnW91/FVrkeDBhVjSeyhsfMiavZoOSWhL0qGZCadD
-            Y8RMy/Ys3enZrSQJFHrsfLg3CnCiWWwRAU6SrkoxaHJkCRGcVSW+Qy/lzctwWrSwe/wp4
-            AKFi+BgsYihWolq0p7cJPHzoUhOXUsooc16yKCXOTaniiPKDOmmY80tV69jbTGf58DCoH
-            PjGu33kujl6ybgeV2shfdSFppapO1wjJnkHkCtyQZxQAN+EtMXa8NzncR9egYiutbb42n
-            gqwRB83tqPI4Lra/Yuo2lAk8MP+8VwxTt3niIzFvO/ZVromJ+Vuw8MZEW0Z3B0=
+          - gMK57T/Q0aOfaZ1SSkjJzfYGcmQtdqJmV44F/6TyRhN0kheerz3+P2GNrZN7toeAKN9Oc
+            HxwXn7kDt8hnleaGgmk8mKVNpfqOcwT+nv2diEide7WksTu3+6cK5Z027ENJtyjTVSUai
+            YBJVPHae3w2Df4Wh8dQamxWPaZXMUa9ExabmfCZDfuh2vBHp9ymsm1DgUFvww1rdOQK9b
+            tnCE8BB2G7jkYteoMghb+vOW1uagn6EOmOV4PSaQxZlxPnrh9aJP0z8cFgACZoeVQjKKc
+            fRLn768FrV6+M/uPahKquugNFXY8WE3ZvYviLSCwTfghwPxbZzD+HHWJMefwfaiQuh6uv
+            EFZKDEwkOqKYNMwNv4eb+E2YJCZisChrXwb69+Td3XF4W/vwWFjY/d3NxD/SiGF3uABz6
+            GWn2nTC//aKlt9gh61D52+upIIt6Ngca96/f9Bgo9X9oYR53zX+YJVYGDZ4k0KPOWLEXP
+            2qfDLljbby04JcCpRxFieuAPj+ShUj8ZOy5C4sE2bqOdrIevCT8crY0VwV2RdnMfzNi4k
+            16C7SsAu2WxQJW/2sccyljvjvn6BAG++TtAPXiuX/Qt15kFTcVEAg0lJC1e5DxNRNRi59
+            2XU1A8O6Mxzi53EvxiRLdRAWUVXb2arDXeaGeuTtLJEA+cDALwhObMmMgvUr7I=
         password: !encrypted/pkcs1-oaep
-          - JhWna1Uvc0DXFoftcyM1669iulQko+r06Ci2OC/RQ5nkZgqxG4K912iHmM0sR9SXCc9b0
-            cMkUa5/yZvyfApRJ0RDbI4k+0VdNjrp2zDocvmP1XfFoxOY6pJ7HRFc3L9p2p2a9mryxZ
-            7O+kTNY0A+dwaGxuqIlasKM3z1BZRpIpYO+QH7x/vNxmRXNxOd+SrY1Nm9H/Klr7SaK8x
-            tsFBMWqu4Yyc+LTNYRwUvGwnEIHDe5FLi8re8hfwLf/kN+HaPh9dWThufk5SGFBVTmnfF
-            5yXHIVU+oAFmO8U5qHvqCLD7vlVMyMLfZtUHev771DLm3zsc/hBuzEYnoAq5NP9MARJnF
-            ORuLnujyX8cxv8JYzjckcfvTSdNtTWjSGlvgRn+XDqLQrXDYGxNj+/MPVs/nn/8l37nZU
-            Fkp+6PLvwLIyesbOkdCK84PbjFInvMn/pHW09B82IR6amqe/mqJVA2eFbH7xWktTV8Mts
-            VI2mmi+H7kl9KEMfKCZnpXihivwoI240ghbQ2gM9FBCKlrmO/EGhZHY34VHETfFN8OsIx
-            2H/2bP/wOsnSl5K5L3jxvjYmlhlu76kM3EwiYtSxnu9uQusqeCfWDnCawSoR1iYef9KB5
-            LpelG0L4hl3LFPd121qL1g1mOOGVwCFIAHEvAqOwJEgVVq54SDjXaSeJPSXOJc=
+          - jPSZqY8TzDVlk0DiFGlpgK9QTEbV04IXQL+QecNlZb3Lv8aQi6a1mu7SIGCWdnEUexSlV
+            wwmfSia+2+DDmx7nt5n0U9dcmWi6nHbTi6qOY7ikZgHfd6vSKeo0Z9VlOzytvdMyoK3bV
+            QLO7kUNDIP/RkxuKMQk4q+bs8e5PDXt5TTRaKWTx10DKtsCyGoBuzA98qxnHJFJQuKBIG
+            +ELTxyOSE50JmXX9boQ1gOTIwWZRd+KkEXGHVBEXxKKpTF3sF7OHNueTY76Ls3tgAzqFP
+            pWy/xuIa83DxaOWmu0HME3DJH90PH0tGf9I2UvlxBieN7Aym/PoA9zMY4OXEN1uFpLQWl
+            GChJirBfvZwoNA6nJDKyzSFCHbqkjummZiaiEPb3degeHD0Fn6DeDnbcGqRQr0UEp4lj4
+            diVNIdGGXVUoRZlWwgNjYRFi21XjsWuIo5E8tOLnySxacmy6e1iUeDm8f9TSa5yZqlaqO
+            2p5COvYZGb5HTwQi9WWRwO3nspNpEPbO9Pgo6aTbFkM2IMDaAWnyZ18H+OHm4D5qnwd9F
+            2bhamq4yOwbYnfjkwq6mkRA8OxVqbyQu3IJ7dKyu1Pw7hRKUz3v5q2ZKwdf2O24NEi64D
+            ep9Wg2lckZpmorLdGBhqUcAKXnnmAreHr9kVdJ1/SggIAX04Kd8osWyfSzVXJI=
 
 - job:
     name: manila-image-elements-build-container
