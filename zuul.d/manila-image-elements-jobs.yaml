@@ -75,7 +75,7 @@
       Build service image for the "generic" manila back end, and any other
       images specified in the role "build-mie-images"
     parent: unittests
-    timeout: 1800
+    timeout: 3600
     required-projects:
       - openstack/manila-image-elements
     run: playbooks/manila-buildimages/run.yaml
