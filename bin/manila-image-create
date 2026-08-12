@@ -232,11 +232,7 @@ verify_dependencies() {
                     sudo zypper --non-interactive --gpg-auto-import-keys in $package_list
                     ;;
                 "fedora" | "rhel" | "centos")
-                    if [ ${platform} = "fedora" ]; then
-                        sudo dnf install $package_list -y
-                    else
-                        sudo yum install $package_list -y
-                    fi
+                    sudo dnf install $package_list -y
                     ;;
                 *)
                     err "Unknown platform '$platform' for installing packages.\nAborting"
